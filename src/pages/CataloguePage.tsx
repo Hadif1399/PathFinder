@@ -115,6 +115,9 @@ export default function CataloguePage() {
                   <span className="px-2 py-1 rounded-full text-xs bg-white/10 text-white/60">
                     {career.salaryRange.split(' - ')[0]}+
                   </span>
+                  <span className="px-2 py-1 rounded-full text-xs bg-neon-yellow/10 text-neon-yellow">
+                    🎓 {career.scholarships.length} Scholarships
+                  </span>
                 </div>
 
                 {/* Click hint */}

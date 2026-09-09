@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useApp } from '../store/AppContext';
 import AIMascot from '../components/AIMascot';
-import { Sparkles, ArrowRight, Trophy, Users, BookOpen } from 'lucide-react';
+import { Sparkles, ArrowRight, Trophy, Users, BookOpen, Award } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 const typewriterTexts = [
@@ -37,6 +37,7 @@ export default function HomePage() {
     { icon: <Trophy className="w-6 h-6" />, title: 'Gamified Quiz', desc: '15 interactive questions with drag-and-drop, sliders & scenarios' },
     { icon: <Users className="w-6 h-6" />, title: 'AI-Powered', desc: 'Personalized career recommendations based on your unique profile' },
     { icon: <BookOpen className="w-6 h-6" />, title: 'Career Catalogue', desc: 'Explore 10+ STEM & IT careers with Malaysian pathways' },
+    { icon: <Award className="w-6 h-6" />, title: 'Scholarships', desc: '130+ Malaysian & international scholarships to fund your journey', action: () => dispatch({ type: 'NAVIGATE', page: 'scholarships' }) },
   ];
 
   return (
@@ -166,7 +167,7 @@ export default function HomePage() {
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-6">
             {features.map((feature, i) => (
               <motion.div
                 key={i}
@@ -175,12 +176,13 @@ export default function HomePage() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.2 }}
                 whileHover={{ y: -5 }}
-                className="glass rounded-2xl p-8 text-center group cursor-pointer"
+                onClick={feature.action}
+                className="glass rounded-2xl p-6 text-center group cursor-pointer"
               >
-                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-neon-blue/20 to-neon-purple/20 flex items-center justify-center mx-auto mb-4 text-neon-blue group-hover:scale-110 transition-transform">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-neon-blue/20 to-neon-purple/20 flex items-center justify-center mx-auto mb-3 text-neon-blue group-hover:scale-110 transition-transform">
                   {feature.icon}
                 </div>
-                <h3 className="font-display text-xl font-semibold text-white mb-2">{feature.title}</h3>
+                <h3 className="font-display text-lg font-semibold text-white mb-2">{feature.title}</h3>
                 <p className="text-white/60 text-sm">{feature.desc}</p>
               </motion.div>
             ))}

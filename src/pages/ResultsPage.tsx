@@ -69,7 +69,7 @@ export default function ResultsPage() {
                     {career.description}
                   </p>
 
-                  <div className="flex items-center gap-2 mb-4">
+                  <div className="flex flex-wrap items-center gap-2 mb-4">
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                       career.demandLevel === 'Critical' ? 'bg-red-500/20 text-red-300' :
                       career.demandLevel === 'Very High' ? 'bg-orange-500/20 text-orange-300' :
@@ -79,6 +79,9 @@ export default function ResultsPage() {
                     </span>
                     <span className="px-2 py-1 rounded-full text-xs bg-white/10 text-white/60">
                       {career.category}
+                    </span>
+                    <span className="px-2 py-1 rounded-full text-xs bg-neon-yellow/10 text-neon-yellow">
+                      🎓 {career.scholarships.length}
                     </span>
                   </div>
 

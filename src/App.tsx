@@ -8,6 +8,7 @@ import CataloguePage from './pages/CataloguePage';
 import CareerDetailPage from './pages/CareerDetailPage';
 import RoadmapPage from './pages/RoadmapPage';
 import CertificatePage from './pages/CertificatePage';
+import ScholarshipsPage from './pages/ScholarshipsPage';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect } from 'react';
 
@@ -37,6 +38,8 @@ function AppContent() {
         return <RoadmapPage />;
       case 'certificate':
         return <CertificatePage />;
+      case 'scholarships':
+        return <ScholarshipsPage />;
       default:
         return <HomePage />;
     }

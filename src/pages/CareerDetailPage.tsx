@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useApp } from '../store/AppContext';
 import { careers } from '../data/careers';
-import { ArrowLeft, BookOpen, Briefcase, GraduationCap, Heart, Play, Star } from 'lucide-react';
+import { ArrowLeft, BookOpen, Briefcase, GraduationCap, Heart, Play, Star, Award, Globe, MapPin } from 'lucide-react';
 
 export default function CareerDetailPage() {
   const { state, dispatch } = useApp();
@@ -188,6 +188,140 @@ export default function CareerDetailPage() {
           </motion.div>
         </div>
 
+        {/* Scholarships Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.55 }}
+          className="glass rounded-2xl p-6 mb-8"
+        >
+          <h3 className="font-display text-lg font-bold text-white mb-2 flex items-center gap-2">
+            <Award className="w-5 h-5 text-neon-yellow" />
+            Scholarships & Financial Aid
+          </h3>
+          <p className="text-white/50 text-sm mb-6">
+            Funding opportunities available for pursuing this career path
+          </p>
+
+          {/* Malaysian Scholarships */}
+          <div className="mb-6">
+            <div className="flex items-center gap-2 mb-3">
+              <MapPin className="w-4 h-4 text-neon-blue" />
+              <h4 className="font-semibold text-white/90 text-sm">🇲🇾 Malaysian Scholarships</h4>
+            </div>
+            <div className="grid sm:grid-cols-2 gap-3">
+              {career.scholarships
+                .filter((s) => s.location === 'Malaysia')
+                .map((scholarship, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.6 + i * 0.05 }}
+                    whileHover={{ scale: 1.02 }}
+                    className="p-3 rounded-xl bg-white/5 border border-white/10 hover:border-neon-blue/30 transition-all"
+                  >
+                    <div className="flex items-start justify-between mb-1">
+                      <h5 className="text-sm font-medium text-white/90 leading-tight pr-2">
+                        {scholarship.name}
+                      </h5>
+                      <span className={`shrink-0 px-2 py-0.5 rounded-full text-xs font-medium ${
+                        scholarship.coverage === 'Full' ? 'bg-green-500/20 text-green-300' :
+                        scholarship.coverage === 'Partial' ? 'bg-yellow-500/20 text-yellow-300' :
+                        'bg-blue-500/20 text-blue-300'
+                      }`}>
+                        {scholarship.coverage}
+                      </span>
+                    </div>
+                    <p className="text-xs text-white/40 mb-1">{scholarship.provider}</p>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs px-2 py-0.5 rounded bg-white/5 text-white/50">
+                        {scholarship.level}
+                      </span>
+                    </div>
+                    {scholarship.description && (
+                      <p className="text-xs text-white/40 mt-2 leading-relaxed">
+                        {scholarship.description}
+                      </p>
+                    )}
+                  </motion.div>
+                ))}
+            </div>
+          </div>
+
+          {/* Overseas Scholarships */}
+          {career.scholarships.filter((s) => s.location === 'Overseas').length > 0 && (
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <Globe className="w-4 h-4 text-neon-purple" />
+                <h4 className="font-semibold text-white/90 text-sm">🌏 International Scholarships</h4>
+              </div>
+              <div className="grid sm:grid-cols-2 gap-3">
+                {career.scholarships
+                  .filter((s) => s.location === 'Overseas')
+                  .map((scholarship, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.8 + i * 0.05 }}
+                      whileHover={{ scale: 1.02 }}
+                      className="p-3 rounded-xl bg-gradient-to-br from-neon-purple/5 to-neon-blue/5 border border-neon-purple/20 hover:border-neon-purple/40 transition-all"
+                    >
+                      <div className="flex items-start justify-between mb-1">
+                        <h5 className="text-sm font-medium text-white/90 leading-tight pr-2">
+                          {scholarship.name}
+                        </h5>
+                        <span className={`shrink-0 px-2 py-0.5 rounded-full text-xs font-medium ${
+                          scholarship.coverage === 'Full' ? 'bg-green-500/20 text-green-300' :
+                          scholarship.coverage === 'Partial' ? 'bg-yellow-500/20 text-yellow-300' :
+                          'bg-blue-500/20 text-blue-300'
+                        }`}>
+                          {scholarship.coverage}
+                        </span>
+                      </div>
+                      <p className="text-xs text-white/40 mb-1">{scholarship.provider}</p>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs px-2 py-0.5 rounded bg-white/5 text-white/50">
+                          {scholarship.level}
+                        </span>
+                      </div>
+                      {scholarship.description && (
+                        <p className="text-xs text-white/40 mt-2 leading-relaxed">
+                          {scholarship.description}
+                        </p>
+                      )}
+                    </motion.div>
+                  ))}
+              </div>
+            </div>
+          )}
+
+          {/* Summary Stats */}
+          <div className="mt-6 p-4 rounded-xl bg-gradient-to-r from-neon-blue/10 to-neon-purple/10 border border-white/5">
+            <div className="grid grid-cols-3 gap-4 text-center">
+              <div>
+                <p className="text-2xl font-bold text-neon-blue">
+                  {career.scholarships.filter((s) => s.location === 'Malaysia').length}
+                </p>
+                <p className="text-xs text-white/50">Local Scholarships</p>
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-neon-purple">
+                  {career.scholarships.filter((s) => s.location === 'Overseas').length}
+                </p>
+                <p className="text-xs text-white/50">Overseas Scholarships</p>
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-neon-green">
+                  {career.scholarships.filter((s) => s.coverage === 'Full').length}
+                </p>
+                <p className="text-xs text-white/50">Full Coverage</p>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
         {/* Video Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -239,7 +373,9 @@ export default function CareerDetailPage() {
               <p className="font-display font-bold text-neon-blue mb-1">{career.npcName} says:</p>
               <p className="text-white/70 text-sm">
                 "This is an exciting career path! In Malaysia, we're seeing huge growth in this field. 
-                With the right SPM results and passion, you can definitely make it. Start building your 
+                With the right SPM results and passion, you can definitely make it. There are also 
+                <span className="text-neon-yellow font-medium"> {career.scholarships.length} scholarships </span> 
+                available to help fund your journey — both local and overseas! Start building your 
                 skills now and don't be afraid to explore!"
               </p>
             </div>

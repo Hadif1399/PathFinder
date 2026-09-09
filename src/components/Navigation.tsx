@@ -47,6 +47,12 @@ export default function Navigation() {
             >
               Career Catalogue
             </button>
+            <button
+              onClick={() => dispatch({ type: 'NAVIGATE', page: 'scholarships' })}
+              className="text-sm text-white/70 hover:text-neon-blue transition-colors"
+            >
+              🎓 Scholarships
+            </button>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -77,6 +83,7 @@ export default function Navigation() {
             <button onClick={() => { dispatch({ type: 'NAVIGATE', page: 'home' }); setMobileOpen(false); }} className="block w-full text-left text-white/70 hover:text-neon-blue">Home</button>
             <button onClick={() => { dispatch({ type: 'NAVIGATE', page: 'quiz' }); setMobileOpen(false); }} className="block w-full text-left text-white/70 hover:text-neon-blue">Career Quiz</button>
             <button onClick={() => { dispatch({ type: 'NAVIGATE', page: 'catalogue' }); setMobileOpen(false); }} className="block w-full text-left text-white/70 hover:text-neon-blue">Career Catalogue</button>
+            <button onClick={() => { dispatch({ type: 'NAVIGATE', page: 'scholarships' }); setMobileOpen(false); }} className="block w-full text-left text-white/70 hover:text-neon-blue">🎓 Scholarships</button>
           </div>
         </motion.div>
       )}

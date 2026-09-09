@@ -1,3 +1,12 @@
+export interface Scholarship {
+  name: string;
+  provider: string;
+  coverage: 'Full' | 'Partial' | 'Tuition';
+  location: 'Malaysia' | 'Overseas';
+  level: 'Foundation' | 'Diploma' | 'Degree' | 'Master' | 'PhD';
+  description?: string;
+}
+
 export interface Career {
   id: string;
   title: string;
@@ -24,7 +33,261 @@ export interface Career {
   demandLevel: 'High' | 'Very High' | 'Critical';
   npcName: string;
   npcEmoji: string;
+  scholarships: Scholarship[];
 }
+
+// Common Malaysian scholarships
+const jpaScholarship: Scholarship = {
+  name: 'JPA Scholarship (Program Penajaan Cemerlang)',
+  provider: 'Jabatan Perkhidmatan Awam (JPA)',
+  coverage: 'Full',
+  location: 'Malaysia',
+  level: 'Degree',
+  description: 'Full sponsorship for top SPM achievers to local and overseas universities',
+};
+
+const maraScholarship: Scholarship = {
+  name: 'MARA Young Talent Programme',
+  provider: 'MARA',
+  coverage: 'Full',
+  location: 'Malaysia',
+  level: 'Degree',
+  description: 'For Bumiputera students with excellent SPM results',
+};
+
+const khazanahScholarship: Scholarship = {
+  name: 'Khazanah Global Scholarship',
+  provider: 'Khazanah Nasional',
+  coverage: 'Full',
+  location: 'Overseas',
+  level: 'Degree',
+  description: 'Prestigious scholarship for studies at top global universities with bond',
+};
+
+const petronasScholarship: Scholarship = {
+  name: 'Petronas Education Sponsorship Programme',
+  provider: 'Petronas',
+  coverage: 'Full',
+  location: 'Malaysia',
+  level: 'Degree',
+  description: 'Full sponsorship with employment bond at Petronas',
+};
+
+const shellScholarship: Scholarship = {
+  name: 'Shell Malaysia Scholarship',
+  provider: 'Shell Malaysia',
+  coverage: 'Full',
+  location: 'Overseas',
+  level: 'Degree',
+  description: 'For outstanding students in engineering and STEM fields',
+};
+
+const bnmScholarship: Scholarship = {
+  name: 'Bank Negara Malaysia Kijang Scholarship',
+  provider: 'Bank Negara Malaysia',
+  coverage: 'Full',
+  location: 'Overseas',
+  level: 'Degree',
+  description: 'For top students in economics, finance, and related fields',
+};
+
+const maybankScholarship: Scholarship = {
+  name: 'Maybank Foundation Scholarship',
+  provider: 'Maybank Foundation',
+  coverage: 'Full',
+  location: 'Malaysia',
+  level: 'Degree',
+  description: 'For underprivileged students pursuing degree in various fields',
+};
+
+const simeDarbyScholarship: Scholarship = {
+  name: 'Yayasan Sime Darby Scholarship',
+  provider: 'Yayasan Sime Darby',
+  coverage: 'Full',
+  location: 'Overseas',
+  level: 'Degree',
+  description: 'For outstanding students in STEM and business fields',
+};
+
+const uemScholarship: Scholarship = {
+  name: 'Yayasan UEM Scholarship',
+  provider: 'Yayasan UEM',
+  coverage: 'Full',
+  location: 'Malaysia',
+  level: 'Degree',
+  description: 'For engineering and technology students',
+};
+
+const tmScholarship: Scholarship = {
+  name: 'Telekom Malaysia Scholarship',
+  provider: 'TM Foundation',
+  coverage: 'Full',
+  location: 'Malaysia',
+  level: 'Degree',
+  description: 'For ICT and engineering students with employment bond',
+};
+
+const gamudaScholarship: Scholarship = {
+  name: 'Gamuda Scholarship',
+  provider: 'Gamuda Berhad',
+  coverage: 'Full',
+  location: 'Overseas',
+  level: 'Degree',
+  description: 'For engineering students with bond at Gamuda',
+};
+
+const cimbScholarship: Scholarship = {
+  name: 'CIMB ASEAN Scholarship',
+  provider: 'CIMB Group',
+  coverage: 'Full',
+  location: 'Overseas',
+  level: 'Degree',
+  description: 'For studies in top ASEAN and global universities',
+};
+
+const tenagaScholarship: Scholarship = {
+  name: 'Tenaga Nasional Scholarship',
+  provider: 'Tenaga Nasional Berhad',
+  coverage: 'Full',
+  location: 'Malaysia',
+  level: 'Degree',
+  description: 'For electrical and mechanical engineering students',
+};
+
+const ytlScholarship: Scholarship = {
+  name: 'YTL Foundation Scholarship',
+  provider: 'YTL Foundation',
+  coverage: 'Full',
+  location: 'Overseas',
+  level: 'Degree',
+  description: 'For engineering and IT students at top UK universities',
+};
+
+const maxisScholarship: Scholarship = {
+  name: 'Maxis Scholarship',
+  provider: 'Maxis Foundation',
+  coverage: 'Full',
+  location: 'Malaysia',
+  level: 'Degree',
+  description: 'For ICT and telecommunications students',
+};
+
+const cheveningScholarship: Scholarship = {
+  name: 'Chevening Scholarship',
+  provider: 'UK Government (FCDO)',
+  coverage: 'Full',
+  location: 'Overseas',
+  level: 'Master',
+  description: 'Fully funded Master\'s degree at any UK university',
+};
+
+const fulbrightScholarship: Scholarship = {
+  name: 'Fulbright Scholarship',
+  provider: 'US Government',
+  coverage: 'Full',
+  location: 'Overseas',
+  level: 'Master',
+  description: 'Fully funded Master\'s/PhD at US universities',
+};
+
+const mextScholarship: Scholarship = {
+  name: 'MEXT Scholarship',
+  provider: 'Japanese Government',
+  coverage: 'Full',
+  location: 'Overseas',
+  level: 'Degree',
+  description: 'Full scholarship for studies in Japan including language training',
+};
+
+const gksScholarship: Scholarship = {
+  name: 'Global Korea Scholarship (GKS)',
+  provider: 'Korean Government',
+  coverage: 'Full',
+  location: 'Overseas',
+  level: 'Degree',
+  description: 'Full scholarship for undergraduate and graduate studies in South Korea',
+};
+
+const australiaAwards: Scholarship = {
+  name: 'Australia Awards Scholarship',
+  provider: 'Australian Government',
+  coverage: 'Full',
+  location: 'Overseas',
+  level: 'Master',
+  description: 'Fully funded Master\'s degree at Australian universities',
+};
+
+const daadScholarship: Scholarship = {
+  name: 'DAAD Scholarship',
+  provider: 'German Government',
+  coverage: 'Full',
+  location: 'Overseas',
+  level: 'Master',
+  description: 'For postgraduate studies at German universities',
+};
+
+const mitScholarship: Scholarship = {
+  name: 'MIT Media Lab Scholarship',
+  provider: 'MIT',
+  coverage: 'Partial',
+  location: 'Overseas',
+  level: 'PhD',
+  description: 'Research scholarship at MIT for technology and design',
+};
+
+const stanfordScholarship: Scholarship = {
+  name: 'Stanford Knight-Hennessy Scholars',
+  provider: 'Stanford University',
+  coverage: 'Full',
+  location: 'Overseas',
+  level: 'Master',
+  description: 'Full graduate scholarship at Stanford University',
+};
+
+const oxfordScholarship: Scholarship = {
+  name: 'Oxford Clarendon Scholarship',
+  provider: 'University of Oxford',
+  coverage: 'Full',
+  location: 'Overseas',
+  level: 'PhD',
+  description: 'Full funding for graduate studies at Oxford',
+};
+
+const tuitionFeeWaiver: Scholarship = {
+  name: 'Ministry of Higher Education Fee Waiver',
+  provider: 'Kementerian Pengajian Tinggi',
+  coverage: 'Tuition',
+  location: 'Malaysia',
+  level: 'Degree',
+  description: 'Tuition fee waiver for eligible students at public universities',
+};
+
+const YayasanTerengganu: Scholarship = {
+  name: 'Yayasan Terengganu Scholarship',
+  provider: 'Yayasan Terengganu',
+  coverage: 'Full',
+  location: 'Overseas',
+  level: 'Degree',
+  description: 'For Terengganu students studying at top universities',
+};
+
+const YayasanKhazanahWatan: Scholarship = {
+  name: 'Khazanah Watan Scholarship',
+  provider: 'Khazanah Nasional',
+  coverage: 'Full',
+  location: 'Malaysia',
+  level: 'Degree',
+  description: 'Full scholarship for studies at top local universities',
+};
+
+const pnbScholarship: Scholarship = {
+  name: 'PNB Scholarship',
+  provider: 'Permodalan Nasional Berhad',
+  coverage: 'Full',
+  location: 'Overseas',
+  level: 'Degree',
+  description: 'For Bumiputera students at top global universities',
+};
 
 export const careers: Career[] = [
   {
@@ -63,6 +326,21 @@ export const careers: Career[] = [
     demandLevel: 'Critical',
     npcName: 'Captain Code',
     npcEmoji: '🤖',
+    scholarships: [
+      tmScholarship,
+      maxisScholarship,
+      jpaScholarship,
+      maraScholarship,
+      khazanahScholarship,
+      simeDarbyScholarship,
+      ytlScholarship,
+      uemScholarship,
+      petronasScholarship,
+      YayasanKhazanahWatan,
+      gksScholarship,
+      mextScholarship,
+      stanfordScholarship,
+    ],
   },
   {
     id: 'data-scientist',
@@ -99,6 +377,21 @@ export const careers: Career[] = [
     demandLevel: 'Very High',
     npcName: 'Professor Patterns',
     npcEmoji: '🔬',
+    scholarships: [
+      jpaScholarship,
+      bnmScholarship,
+      khazanahScholarship,
+      simeDarbyScholarship,
+      petronasScholarship,
+      maraScholarship,
+      pnbScholarship,
+      YayasanKhazanahWatan,
+      cimbScholarship,
+      cheveningScholarship,
+      fulbrightScholarship,
+      stanfordScholarship,
+      oxfordScholarship,
+    ],
   },
   {
     id: 'cybersecurity-analyst',
@@ -136,6 +429,20 @@ export const careers: Career[] = [
     demandLevel: 'Critical',
     npcName: 'Agent Shield',
     npcEmoji: '🕵️',
+    scholarships: [
+      jpaScholarship,
+      tmScholarship,
+      maxisScholarship,
+      maraScholarship,
+      petronasScholarship,
+      uemScholarship,
+      YayasanKhazanahWatan,
+      khazanahScholarship,
+      simeDarbyScholarship,
+      mextScholarship,
+      gksScholarship,
+      daadScholarship,
+    ],
   },
   {
     id: 'ai-engineer',
@@ -172,6 +479,23 @@ export const careers: Career[] = [
     demandLevel: 'Critical',
     npcName: 'Dr. Neural',
     npcEmoji: '🤯',
+    scholarships: [
+      jpaScholarship,
+      khazanahScholarship,
+      simeDarbyScholarship,
+      petronasScholarship,
+      bnmScholarship,
+      pnbScholarship,
+      maraScholarship,
+      ytlScholarship,
+      YayasanKhazanahWatan,
+      stanfordScholarship,
+      oxfordScholarship,
+      mitScholarship,
+      cheveningScholarship,
+      fulbrightScholarship,
+      mextScholarship,
+    ],
   },
   {
     id: 'biotechnologist',
@@ -209,6 +533,21 @@ export const careers: Career[] = [
     demandLevel: 'High',
     npcName: 'Dr. Gene',
     npcEmoji: '🔬',
+    scholarships: [
+      jpaScholarship,
+      maraScholarship,
+      petronasScholarship,
+      simeDarbyScholarship,
+      khazanahScholarship,
+      YayasanKhazanahWatan,
+      maybankScholarship,
+      uemScholarship,
+      australiaAwards,
+      daadScholarship,
+      mextScholarship,
+      gksScholarship,
+      oxfordScholarship,
+    ],
   },
   {
     id: 'renewable-energy',
@@ -246,6 +585,21 @@ export const careers: Career[] = [
     demandLevel: 'Very High',
     npcName: 'Captain Solar',
     npcEmoji: '⚡',
+    scholarships: [
+      tenagaScholarship,
+      petronasScholarship,
+      jpaScholarship,
+      maraScholarship,
+      gamudaScholarship,
+      uemScholarship,
+      simeDarbyScholarship,
+      khazanahScholarship,
+      YayasanKhazanahWatan,
+      ytlScholarship,
+      australiaAwards,
+      daadScholarship,
+      cheveningScholarship,
+    ],
   },
   {
     id: 'robotics-engineer',
@@ -282,6 +636,23 @@ export const careers: Career[] = [
     demandLevel: 'High',
     npcName: 'Mecha Max',
     npcEmoji: '🦾',
+    scholarships: [
+      jpaScholarship,
+      petronasScholarship,
+      gamudaScholarship,
+      uemScholarship,
+      tenagaScholarship,
+      maraScholarship,
+      simeDarbyScholarship,
+      khazanahScholarship,
+      ytlScholarship,
+      YayasanKhazanahWatan,
+      YayasanTerengganu,
+      mextScholarship,
+      gksScholarship,
+      daadScholarship,
+      stanfordScholarship,
+    ],
   },
   {
     id: 'cloud-architect',
@@ -319,6 +690,22 @@ export const careers: Career[] = [
     demandLevel: 'Very High',
     npcName: 'Cloud Commander',
     npcEmoji: '🌩️',
+    scholarships: [
+      jpaScholarship,
+      tmScholarship,
+      maxisScholarship,
+      petronasScholarship,
+      maraScholarship,
+      khazanahScholarship,
+      simeDarbyScholarship,
+      YayasanKhazanahWatan,
+      pnbScholarship,
+      cimbScholarship,
+      ytlScholarship,
+      cheveningScholarship,
+      mextScholarship,
+      gksScholarship,
+    ],
   },
   {
     id: 'doctor',
@@ -356,6 +743,23 @@ export const careers: Career[] = [
     demandLevel: 'Critical',
     npcName: 'Dr. Healing',
     npcEmoji: '💊',
+    scholarships: [
+      jpaScholarship,
+      maraScholarship,
+      khazanahScholarship,
+      simeDarbyScholarship,
+      petronasScholarship,
+      bnmScholarship,
+      maybankScholarship,
+      pnbScholarship,
+      YayasanTerengganu,
+      YayasanKhazanahWatan,
+      cimbScholarship,
+      australiaAwards,
+      cheveningScholarship,
+      fulbrightScholarship,
+      mextScholarship,
+    ],
   },
   {
     id: 'game-developer',
@@ -393,5 +797,20 @@ export const careers: Career[] = [
     demandLevel: 'High',
     npcName: 'Pixel Pete',
     npcEmoji: '🕹️',
+    scholarships: [
+      jpaScholarship,
+      maraScholarship,
+      tmScholarship,
+      maxisScholarship,
+      YayasanKhazanahWatan,
+      maybankScholarship,
+      khazanahScholarship,
+      simeDarbyScholarship,
+      ytlScholarship,
+      gksScholarship,
+      mextScholarship,
+      daadScholarship,
+      stanfordScholarship,
+    ],
   },
 ];
