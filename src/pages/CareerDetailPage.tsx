@@ -629,10 +629,18 @@ export default function CareerDetailPage() {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            onClick={() => dispatch({ type: 'NAVIGATE', page: 'preuni-scholarships' })}
+            className="px-6 py-3 rounded-full bg-gradient-to-r from-neon-yellow to-neon-orange text-white font-semibold flex items-center gap-2"
+          >
+            💰 Pre-U Scholarships
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => dispatch({ type: 'NAVIGATE', page: 'scholarships' })}
             className="px-6 py-3 rounded-full glass text-white/70 hover:text-neon-yellow"
           >
-            🎓 Browse All Scholarships
+            🎓 Degree Scholarships
           </motion.button>
           <motion.button
             whileHover={{ scale: 1.05 }}

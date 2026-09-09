@@ -54,6 +54,12 @@ export default function Navigation() {
               🏫 Universities
             </button>
             <button
+              onClick={() => dispatch({ type: 'NAVIGATE', page: 'preuni-scholarships' })}
+              className="text-sm text-white/70 hover:text-neon-blue transition-colors"
+            >
+              💰 Pre-U Scholarships
+            </button>
+            <button
               onClick={() => dispatch({ type: 'NAVIGATE', page: 'scholarships' })}
               className="text-sm text-white/70 hover:text-neon-blue transition-colors"
             >
@@ -90,6 +96,7 @@ export default function Navigation() {
             <button onClick={() => { dispatch({ type: 'NAVIGATE', page: 'quiz' }); setMobileOpen(false); }} className="block w-full text-left text-white/70 hover:text-neon-blue">Career Quiz</button>
             <button onClick={() => { dispatch({ type: 'NAVIGATE', page: 'catalogue' }); setMobileOpen(false); }} className="block w-full text-left text-white/70 hover:text-neon-blue">Career Catalogue</button>
             <button onClick={() => { dispatch({ type: 'NAVIGATE', page: 'universities' }); setMobileOpen(false); }} className="block w-full text-left text-white/70 hover:text-neon-blue">🏫 Universities</button>
+            <button onClick={() => { dispatch({ type: 'NAVIGATE', page: 'preuni-scholarships' }); setMobileOpen(false); }} className="block w-full text-left text-white/70 hover:text-neon-blue">💰 Pre-U Scholarships</button>
             <button onClick={() => { dispatch({ type: 'NAVIGATE', page: 'scholarships' }); setMobileOpen(false); }} className="block w-full text-left text-white/70 hover:text-neon-blue">🎓 Scholarships</button>
           </div>
         </motion.div>

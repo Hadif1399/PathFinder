@@ -10,6 +10,7 @@ import RoadmapPage from './pages/RoadmapPage';
 import CertificatePage from './pages/CertificatePage';
 import ScholarshipsPage from './pages/ScholarshipsPage';
 import UniversitiesPage from './pages/UniversitiesPage';
+import PreUniScholarshipsPage from './pages/PreUniScholarshipsPage';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect } from 'react';
 
@@ -43,6 +44,8 @@ function AppContent() {
         return <ScholarshipsPage />;
       case 'universities':
         return <UniversitiesPage />;
+      case 'preuni-scholarships':
+        return <PreUniScholarshipsPage />;
       default:
         return <HomePage />;
     }
