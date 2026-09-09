@@ -137,48 +137,49 @@ export default function FloatingBot() {
 
   return (
     <>
-      <AnimatePresence>
-        {!isExpanded && (
-          <motion.button
-            initial={{ scale: 0, opacity: 0, rotate: -180 }}
-            animate={{ scale: 1, opacity: 1, rotate: 0 }}
-            exit={{ scale: 0, opacity: 0, rotate: 180 }}
-            transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-            onClick={toggleExpand}
-            className="fixed bottom-6 right-6 z-50 group"
-            aria-label="Open CareerCompass assistant"
-          >
-            <motion.div
-              animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }}
-              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-              className="absolute inset-0 rounded-full bg-gradient-to-br from-neon-blue via-neon-purple to-neon-pink"
-            />
-            <motion.div
-              animate={{ y: [0, -5, 0] }}
-              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-              className="relative w-14 h-14 rounded-full bg-gradient-to-br from-neon-blue via-neon-purple to-neon-pink shadow-xl shadow-neon-blue/50 flex items-center justify-center group-hover:scale-110 transition-transform"
-            >
-              <MessageCircle className="w-6 h-6 text-white" />
-            </motion.div>
-            <div className="absolute bottom-full right-0 mb-2 px-3 py-2 rounded-lg glass-strong text-xs text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-              Click to chat with your AI guide! 💬
-            </div>
-          </motion.button>
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>
-        {isExpanded && (
+      {/* Minimized dot - simple conditional render */}
+      {!isExpanded && (
+        <motion.button
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+          onClick={toggleExpand}
+          className="fixed bottom-6 right-6 z-[60] group cursor-pointer"
+          aria-label="Open CareerCompass assistant"
+        >
+          {/* Pulsing ring */}
           <motion.div
-            initial={{ scale: 0, opacity: 0, rotate: -180 }}
-            animate={{ scale: 1, opacity: 1, rotate: 0 }}
-            exit={{ scale: 0.5, opacity: 0, rotate: 180, transition: { duration: 0.3 } }}
-            drag
-            dragMomentum={false}
-            onDragEnd={handleDragEnd}
-            style={{ x: hasMoved ? position.x : undefined, y: hasMoved ? position.y : undefined }}
-            className="fixed bottom-6 right-6 z-50 cursor-move select-none"
+            animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }}
+            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute inset-0 rounded-full bg-gradient-to-br from-neon-blue via-neon-purple to-neon-pink"
+          />
+          {/* Main button */}
+          <motion.div
+            animate={{ y: [0, -3, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+            className="relative w-14 h-14 rounded-full bg-gradient-to-br from-neon-blue via-neon-purple to-neon-pink shadow-xl shadow-neon-blue/50 flex items-center justify-center group-hover:scale-110 transition-transform"
           >
+            <MessageCircle className="w-6 h-6 text-white" />
+          </motion.div>
+          {/* Tooltip */}
+          <div className="absolute bottom-full right-0 mb-2 px-3 py-2 rounded-lg glass-strong text-xs text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+            Click to chat with your AI guide! 💬
+          </div>
+        </motion.button>
+      )}
+
+      {/* Main bot - only when expanded */}
+      {isExpanded && (
+        <motion.div
+          initial={{ scale: 0, opacity: 0, rotate: -180 }}
+          animate={{ scale: 1, opacity: 1, rotate: 0 }}
+          exit={{ scale: 0.5, opacity: 0, rotate: 180, transition: { duration: 0.3 } }}
+          drag
+          dragMomentum={false}
+          onDragEnd={handleDragEnd}
+          style={{ x: hasMoved ? position.x : undefined, y: hasMoved ? position.y : undefined }}
+          className="fixed bottom-6 right-6 z-[60] cursor-move select-none"
+        >
             <AnimatePresence>
               {showBubble && (
                 <motion.div
@@ -256,9 +257,8 @@ export default function FloatingBot() {
                 </div>
               </button>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+        </motion.div>
+      )}
     </>
   );
 }
