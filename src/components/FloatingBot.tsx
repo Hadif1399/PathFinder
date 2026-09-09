@@ -144,7 +144,7 @@ export default function FloatingBot() {
           animate={{ scale: 1, opacity: 1 }}
           transition={{ type: 'spring', stiffness: 260, damping: 20 }}
           onClick={toggleExpand}
-          className="fixed bottom-6 right-6 z-[60] group cursor-pointer"
+          className="fixed bottom-6 right-6 z-[60] group cursor-pointer w-14 h-14"
           aria-label="Open CareerCompass assistant"
         >
           {/* Pulsing ring */}
@@ -157,7 +157,7 @@ export default function FloatingBot() {
           <motion.div
             animate={{ y: [0, -3, 0] }}
             transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-            className="relative w-14 h-14 rounded-full bg-gradient-to-br from-neon-blue via-neon-purple to-neon-pink shadow-xl shadow-neon-blue/50 flex items-center justify-center group-hover:scale-110 transition-transform"
+            className="relative w-full h-full rounded-full bg-gradient-to-br from-neon-blue via-neon-purple to-neon-pink shadow-xl shadow-neon-blue/50 flex items-center justify-center group-hover:scale-110 transition-transform"
           >
             <MessageCircle className="w-6 h-6 text-white" />
           </motion.div>
