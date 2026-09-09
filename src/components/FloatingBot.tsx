@@ -224,18 +224,51 @@ export default function FloatingBot() {
 
   return (
     <>
-      {/* Minimized dot */}
+      {/* Minimized dot - More visible and interactive */}
       <AnimatePresence>
         {!isExpanded && (
           <motion.button
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0, opacity: 0 }}
+            initial={{ scale: 0, opacity: 0, rotate: -180 }}
+            animate={{ scale: 1, opacity: 1, rotate: 0 }}
+            exit={{ scale: 0, opacity: 0, rotate: 180 }}
+            transition={{ type: 'spring', stiffness: 260, damping: 20 }}
             onClick={toggleExpand}
-            className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-gradient-to-br from-neon-blue via-neon-purple to-neon-pink shadow-lg shadow-neon-blue/50 flex items-center justify-center hover:scale-110 transition-transform"
+            className="fixed bottom-6 right-6 z-50 group"
             aria-label="Open CareerCompass assistant"
           >
-            <MessageCircle className="w-5 h-5 text-white" />
+            {/* Pulsing ring */}
+            <motion.div
+              animate={{
+                scale: [1, 1.5, 1],
+                opacity: [0.5, 0, 0.5],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: 'easeInOut',
+              }}
+              className="absolute inset-0 rounded-full bg-gradient-to-br from-neon-blue via-neon-purple to-neon-pink"
+            />
+            
+            {/* Main button with bounce animation */}
+            <motion.div
+              animate={{
+                y: [0, -5, 0],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: 'easeInOut',
+              }}
+              className="relative w-14 h-14 rounded-full bg-gradient-to-br from-neon-blue via-neon-purple to-neon-pink shadow-xl shadow-neon-blue/50 flex items-center justify-center group-hover:scale-110 transition-transform"
+            >
+              <MessageCircle className="w-6 h-6 text-white" />
+            </motion.div>
+            
+            {/* Tooltip on hover */}
+            <div className="absolute bottom-full right-0 mb-2 px-3 py-2 rounded-lg glass-strong text-xs text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+              Click to chat with your AI guide! 💬
+            </div>
           </motion.button>
         )}
       </AnimatePresence>
@@ -244,9 +277,9 @@ export default function FloatingBot() {
       <AnimatePresence>
         {isExpanded && (
           <motion.div
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0, opacity: 0 }}
+            initial={{ scale: 0, opacity: 0, rotate: -180 }}
+            animate={{ scale: 1, opacity: 1, rotate: 0 }}
+            exit={{ scale: 0.5, opacity: 0, rotate: 180, transition: { duration: 0.3 } }}
             drag
             dragControls={dragControls}
             dragMomentum={false}
@@ -407,10 +440,15 @@ export default function FloatingBot() {
                   e.stopPropagation();
                   toggleExpand();
                 }}
-                className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-space-800 border border-white/20 flex items-center justify-center hover:bg-space-700 transition-colors"
+                className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-space-800 border-2 border-white/30 flex items-center justify-center hover:bg-neon-blue/20 hover:border-neon-blue/50 hover:scale-110 transition-all group"
                 aria-label="Minimize assistant"
               >
-                <Minimize2 className="w-3 h-3 text-white/60" />
+                <Minimize2 className="w-3.5 h-3.5 text-white/70 group-hover:text-neon-blue transition-colors" />
+                
+                {/* Tooltip */}
+                <div className="absolute top-full right-0 mt-2 px-2 py-1 rounded bg-space-800 border border-white/20 text-xs text-white/80 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                  Minimize
+                </div>
               </button>
             </motion.div>
           </motion.div>
