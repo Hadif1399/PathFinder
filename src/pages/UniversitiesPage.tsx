@@ -1,53 +1,149 @@
 import { useState, useMemo } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '../store/AppContext';
-import { commonPreUniversity, universitiesMalaysia, universitiesOverseas } from '../data/education';
-import { GraduationCap, MapPin, Globe, Search, DollarSign, Clock, Building2 } from 'lucide-react';
+import { GraduationCap, MapPin, Globe, Search, X, Clock, DollarSign, Award, Building2 } from 'lucide-react';
+import { commonPreUniversity, universitiesMalaysia, universitiesOverseas, University, PreUniversity } from '../data/education';
+
+type CategoryType = 'all' | 'preuni' | 'malaysia' | 'overseas';
+type SubFilterType = 'all' | string;
+
+interface DisplayItem {
+  id: string;
+  name: string;
+  category: 'preuni' | 'malaysia' | 'overseas';
+  subCategory: string;
+  duration: string;
+  cost: string;
+  location?: string;
+  country?: string;
+  ranking?: string;
+  description?: string;
+  institutions?: string[];
+  notes?: string;
+}
 
 export default function UniversitiesPage() {
   const { dispatch } = useApp();
-  const [tab, setTab] = useState<'preuni' | 'malaysia' | 'overseas'>('malaysia');
   const [searchQuery, setSearchQuery] = useState('');
-  const [countryFilter, setCountryFilter] = useState<string>('all');
+  const [categoryFilter, setCategoryFilter] = useState<CategoryType>('all');
+  const [subFilter, setSubFilter] = useState<SubFilterType>('all');
+  const [selectedItem, setSelectedItem] = useState<DisplayItem | null>(null);
 
-  const allMalaysiaUnis = useMemo(() => [
-    ...universitiesMalaysia.publicTop,
-    ...universitiesMalaysia.privateTop,
-    ...universitiesMalaysia.specialized,
-  ], []);
+  // Convert all data to unified format
+  const allItems = useMemo(() => {
+    const items: DisplayItem[] = [];
 
-  const allOverseasUnis = useMemo(() => [
-    ...universitiesOverseas.singapore,
-    ...universitiesOverseas.australia,
-    ...universitiesOverseas.uk,
-    ...universitiesOverseas.usa,
-    ...universitiesOverseas.japan,
-    ...universitiesOverseas.southKorea,
-    ...universitiesOverseas.germany,
-  ], []);
+    // Pre-University
+    commonPreUniversity.forEach((preu, idx) => {
+      items.push({
+        id: `preuni-${idx}`,
+        name: preu.name,
+        category: 'preuni',
+        subCategory: preu.type,
+        duration: preu.duration,
+        cost: preu.cost,
+        description: preu.notes,
+        institutions: preu.institutions,
+        notes: preu.notes,
+      });
+    });
 
-  const countries = useMemo(() => {
-    const set = new Set(allOverseasUnis.map((u) => u.country).filter(Boolean));
-    return ['all', ...Array.from(set)] as string[];
-  }, [allOverseasUnis]);
+    // Malaysian Universities
+    const addMalaysianUni = (uni: University, type: string) => {
+      items.push({
+        id: `malaysia-${uni.name}`,
+        name: uni.name,
+        category: 'malaysia',
+        subCategory: type,
+        duration: uni.duration,
+        cost: uni.totalCost,
+        location: 'Malaysia',
+        ranking: uni.ranking,
+        description: uni.notes,
+        notes: uni.notes,
+      });
+    };
 
-  const filteredMalaysia = useMemo(() => {
-    if (!searchQuery) return allMalaysiaUnis;
-    const q = searchQuery.toLowerCase();
-    return allMalaysiaUnis.filter((u) => u.name.toLowerCase().includes(q) || u.program.toLowerCase().includes(q));
-  }, [allMalaysiaUnis, searchQuery]);
+    universitiesMalaysia.publicTop.forEach((uni) => addMalaysianUni(uni, 'Public'));
+    universitiesMalaysia.privateTop.forEach((uni) => addMalaysianUni(uni, 'Private'));
+    universitiesMalaysia.specialized.forEach((uni) => addMalaysianUni(uni, 'Specialized'));
 
-  const filteredOverseas = useMemo(() => {
-    let result = allOverseasUnis;
-    if (countryFilter !== 'all') {
-      result = result.filter((u) => u.country === countryFilter);
+    // Overseas Universities
+    const addOverseasUni = (uni: University) => {
+      items.push({
+        id: `overseas-${uni.name}`,
+        name: uni.name,
+        category: 'overseas',
+        subCategory: uni.country || 'Other',
+        duration: uni.duration,
+        cost: uni.totalCost,
+        location: 'Overseas',
+        country: uni.country,
+        ranking: uni.ranking,
+        description: uni.notes,
+        notes: uni.notes,
+      });
+    };
+
+    universitiesOverseas.singapore.forEach(addOverseasUni);
+    universitiesOverseas.australia.forEach(addOverseasUni);
+    universitiesOverseas.uk.forEach(addOverseasUni);
+    universitiesOverseas.usa.forEach(addOverseasUni);
+    universitiesOverseas.japan.forEach(addOverseasUni);
+    universitiesOverseas.southKorea.forEach(addOverseasUni);
+    universitiesOverseas.germany.forEach(addOverseasUni);
+
+    return items;
+  }, []);
+
+  // Get available sub-filters based on category
+  const availableSubFilters = useMemo(() => {
+    if (categoryFilter === 'all') return [];
+    
+    const filtered = allItems.filter((item) => item.category === categoryFilter);
+    const subCategories = Array.from(new Set(filtered.map((item) => item.subCategory)));
+    return ['all', ...subCategories];
+  }, [categoryFilter, allItems]);
+
+  // Filter items
+  const filteredItems = useMemo(() => {
+    return allItems.filter((item) => {
+      const matchesCategory = categoryFilter === 'all' || item.category === categoryFilter;
+      const matchesSubFilter = subFilter === 'all' || item.subCategory === subFilter;
+      const matchesSearch = searchQuery === '' || 
+        item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.subCategory.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.country?.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchesCategory && matchesSubFilter && matchesSearch;
+    });
+  }, [allItems, categoryFilter, subFilter, searchQuery]);
+
+  // Stats
+  const stats = useMemo(() => ({
+    total: allItems.length,
+    preuni: allItems.filter((i) => i.category === 'preuni').length,
+    malaysia: allItems.filter((i) => i.category === 'malaysia').length,
+    overseas: allItems.filter((i) => i.category === 'overseas').length,
+  }), [allItems]);
+
+  const getCategoryIcon = (category: string) => {
+    switch (category) {
+      case 'preuni': return '📚';
+      case 'malaysia': return '🇲🇾';
+      case 'overseas': return '🌏';
+      default: return '🎓';
     }
-    if (searchQuery) {
-      const q = searchQuery.toLowerCase();
-      result = result.filter((u) => u.name.toLowerCase().includes(q) || u.program.toLowerCase().includes(q));
+  };
+
+  const getCategoryColor = (category: string) => {
+    switch (category) {
+      case 'preuni': return 'bg-neon-green/20 text-neon-green';
+      case 'malaysia': return 'bg-neon-blue/20 text-neon-blue';
+      case 'overseas': return 'bg-neon-purple/20 text-neon-purple';
+      default: return 'bg-white/10 text-white/60';
     }
-    return result;
-  }, [allOverseasUnis, countryFilter, searchQuery]);
+  };
 
   const getCountryFlag = (country?: string) => {
     const flags: Record<string, string> = {
@@ -64,393 +160,368 @@ export default function UniversitiesPage() {
   };
 
   return (
-    <div className="min-h-screen pt-20 pb-10 px-4">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen pt-20 pb-16 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-10"
+          transition={{ duration: 0.5 }}
+          className="text-center mb-12"
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-4">
             <GraduationCap className="w-4 h-4 text-neon-green" />
-            <span className="text-sm text-white/80">Education Pathways & Costs</span>
+            <span className="text-sm text-white/80">Your Education Journey</span>
           </div>
-          <h1 className="font-display text-3xl sm:text-4xl font-bold text-white mb-4">
-            Universities & Education Guide
+          <h1 className="font-display text-4xl sm:text-5xl font-bold text-white mb-4">
+            Universities & Education
           </h1>
-          <p className="text-white/60 max-w-lg mx-auto">
-            Compare pre-university pathways, Malaysian universities, and international options with detailed cost breakdowns
+          <p className="text-lg text-white/60 max-w-2xl mx-auto">
+            Explore {stats.total} education pathways including pre-university programs, Malaysian universities, and international options
           </p>
         </motion.div>
 
-        {/* Tabs */}
-        <div className="flex justify-center gap-3 mb-8">
+        {/* Stats */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8"
+        >
           {[
-            { value: 'preuni', label: '📚 Pre-University', count: commonPreUniversity.length },
-            { value: 'malaysia', label: '🇲🇾 Malaysian', count: allMalaysiaUnis.length },
-            { value: 'overseas', label: '🌏 International', count: allOverseasUnis.length },
-          ].map((t) => (
-            <motion.button
-              key={t.value}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setTab(t.value as typeof tab)}
-              className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all ${
-                tab === t.value
-                  ? 'bg-gradient-to-r from-neon-blue to-neon-purple text-white'
-                  : 'glass text-white/60 hover:text-white'
-              }`}
-            >
-              {t.label} ({t.count})
-            </motion.button>
+            { label: 'Total Options', value: stats.total, color: 'text-neon-blue', icon: '🎓' },
+            { label: 'Pre-University', value: stats.preuni, color: 'text-neon-green', icon: '📚' },
+            { label: 'Malaysian', value: stats.malaysia, color: 'text-neon-blue', icon: '🇲🇾' },
+            { label: 'Overseas', value: stats.overseas, color: 'text-neon-purple', icon: '🌏' },
+          ].map((stat, i) => (
+            <div key={i} className="glass rounded-xl p-4 text-center">
+              <div className="text-2xl mb-1">{stat.icon}</div>
+              <div className={`text-2xl font-bold ${stat.color}`}>{stat.value}</div>
+              <div className="text-xs text-white/50">{stat.label}</div>
+            </div>
           ))}
-        </div>
+        </motion.div>
 
-        {/* Search */}
-        <div className="max-w-md mx-auto mb-8">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search universities or programs..."
-              className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/30 text-sm focus:outline-none focus:border-neon-blue"
-            />
+        {/* Filter Bar */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="sticky top-20 z-30 mb-8"
+        >
+          <div className="glass-strong rounded-2xl p-4 sm:p-6 shadow-xl">
+            {/* Search Input */}
+            <div className="relative mb-4">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
+              <input
+                type="text"
+                placeholder="Search universities, programs, or countries..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/40 focus:outline-none focus:border-neon-blue/50 focus:bg-white/10 transition-all"
+              />
+            </div>
+
+            {/* Filter Pills */}
+            <div className="space-y-3">
+              {/* Category Filters */}
+              <div className="flex flex-wrap gap-2 sm:gap-3">
+                <span className="text-sm text-white/60 py-2">Category:</span>
+                {([
+                  { value: 'all', label: 'All', icon: '🎓' },
+                  { value: 'preuni', label: 'Pre-University', icon: '📚' },
+                  { value: 'malaysia', label: 'Malaysian', icon: '🇲🇾' },
+                  { value: 'overseas', label: 'Overseas', icon: '🌏' },
+                ] as const).map((filter) => (
+                  <motion.button
+                    key={filter.value}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => {
+                      setCategoryFilter(filter.value);
+                      setSubFilter('all');
+                    }}
+                    className={`px-4 sm:px-6 py-2 rounded-full text-sm font-medium transition-all ${
+                      categoryFilter === filter.value
+                        ? 'bg-gradient-to-r from-neon-blue to-neon-purple text-white shadow-lg shadow-neon-blue/30'
+                        : 'bg-white/5 text-white/70 hover:bg-white/10 border border-white/10'
+                    }`}
+                  >
+                    {filter.icon} {filter.label}
+                  </motion.button>
+                ))}
+              </div>
+
+              {/* Sub Filters */}
+              {availableSubFilters.length > 1 && (
+                <div className="flex flex-wrap gap-2 sm:gap-3">
+                  <span className="text-sm text-white/60 py-2">
+                    {categoryFilter === 'preuni' ? 'Type:' : categoryFilter === 'malaysia' ? 'Category:' : 'Country:'}
+                  </span>
+                  {availableSubFilters.map((filter) => (
+                    <motion.button
+                      key={filter}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => setSubFilter(filter)}
+                      className={`px-4 sm:px-6 py-2 rounded-full text-sm font-medium transition-all ${
+                        subFilter === filter
+                          ? 'bg-gradient-to-r from-neon-green to-neon-blue text-white shadow-lg shadow-neon-green/30'
+                          : 'bg-white/5 text-white/70 hover:bg-white/10 border border-white/10'
+                      }`}
+                    >
+                      {filter === 'all' ? '✨ All' : filter === 'preuni' ? '📚 Pre-U' : filter}
+                    </motion.button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        </motion.div>
 
-        {/* Pre-University Tab */}
-        {tab === 'preuni' && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-          >
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {commonPreUniversity.map((preU, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                  whileHover={{ y: -5 }}
-                  className="glass-strong rounded-2xl p-6"
-                >
-                  <div className="flex items-center justify-between mb-3">
-                    <h4 className="font-display text-base font-bold text-white">{preU.name}</h4>
-                    <span className="text-xs px-2 py-1 rounded-full bg-neon-green/10 text-neon-green font-medium">
-                      {preU.type}
+        {/* Results Count */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="mb-6 text-sm text-white/60"
+        >
+          Showing {filteredItems.length} of {allItems.length} options
+        </motion.div>
+
+        {/* Grid */}
+        <motion.div
+          layout
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
+          <AnimatePresence mode="popLayout">
+            {filteredItems.map((item, index) => (
+              <motion.div
+                key={item.id}
+                layout
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
+                whileHover={{ y: -4 }}
+                className="group"
+              >
+                <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6 shadow-lg hover:shadow-2xl hover:shadow-neon-blue/10 transition-all duration-300 h-full flex flex-col">
+                  {/* Category Badge */}
+                  <div className="flex items-start justify-between mb-4">
+                    <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${getCategoryColor(item.category)}`}>
+                      {getCategoryIcon(item.category)} {item.category === 'preuni' ? 'Pre-U' : item.category === 'malaysia' ? 'Malaysia' : item.country || 'Overseas'}
                     </span>
+                    {item.ranking && (
+                      <span className="px-3 py-1 rounded-full text-xs font-semibold bg-neon-yellow/20 text-neon-yellow">
+                        {item.ranking}
+                      </span>
+                    )}
                   </div>
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2 text-sm text-white/70">
-                      <Clock className="w-4 h-4" />
-                      <span>{preU.duration}</span>
+
+                  {/* Name */}
+                  <h3 className="text-xl font-bold text-white mb-2 group-hover:text-neon-blue transition-colors">
+                    {item.name}
+                  </h3>
+
+                  {/* Sub Category */}
+                  <p className="text-sm text-white/60 mb-4 font-medium">
+                    {item.subCategory}
+                  </p>
+
+                  {/* Details */}
+                  <div className="space-y-2 mb-6 flex-grow">
+                    <div className="flex items-center gap-2 text-sm">
+                      <Clock className="w-4 h-4 text-neon-blue flex-shrink-0" />
+                      <span className="text-white/70">{item.duration}</span>
                     </div>
                     <div className="flex items-center gap-2 text-sm">
-                      <DollarSign className="w-4 h-4 text-neon-yellow" />
-                      <span className="text-neon-yellow font-semibold">{preU.cost}</span>
+                      <DollarSign className="w-4 h-4 text-neon-yellow flex-shrink-0" />
+                      <span className="text-neon-yellow font-medium">{item.cost}</span>
                     </div>
-                    <div>
-                      <p className="text-xs text-white/40 mb-1">Available at:</p>
-                      <div className="flex flex-wrap gap-1">
-                        {preU.institutions.map((inst) => (
-                          <span key={inst} className="text-xs px-2 py-0.5 rounded bg-white/5 text-white/60">
-                            {inst}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                    {preU.notes && (
-                      <p className="text-xs text-white/40 italic border-t border-white/5 pt-2 mt-2">
-                        💡 {preU.notes}
+                    {item.description && (
+                      <p className="text-sm text-white/50 line-clamp-2">
+                        {item.description}
                       </p>
                     )}
                   </div>
-                </motion.div>
-              ))}
-            </div>
 
-            {/* Cost Comparison */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              className="mt-8 glass-strong rounded-2xl p-6"
+                  {/* Quick View Button */}
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setSelectedItem(item)}
+                    className="w-full py-3 rounded-lg bg-white/5 border border-white/10 text-white/80 hover:bg-gradient-to-r hover:from-neon-blue hover:to-neon-purple hover:text-white hover:border-transparent transition-all duration-300 font-medium text-sm flex items-center justify-center gap-2"
+                  >
+                    <GraduationCap className="w-4 h-4" />
+                    Quick View
+                  </motion.button>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
+
+        {/* No Results */}
+        {filteredItems.length === 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-center py-16"
+          >
+            <p className="text-white/60 text-lg">No education options found matching your criteria.</p>
+            <button
+              onClick={() => {
+                setCategoryFilter('all');
+                setSubFilter('all');
+                setSearchQuery('');
+              }}
+              className="mt-4 px-6 py-2 rounded-lg bg-white/5 border border-white/10 text-white/80 hover:bg-white/10 transition-all"
             >
-              <h4 className="font-display text-lg font-bold text-white mb-4">💰 Pre-University Cost Comparison</h4>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-white/10">
-                      <th className="text-left py-2 text-white/60 font-medium">Program</th>
-                      <th className="text-left py-2 text-white/60 font-medium">Duration</th>
-                      <th className="text-right py-2 text-neon-yellow font-medium">Cost Range</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {commonPreUniversity.map((preU, i) => (
-                      <tr key={i} className="border-b border-white/5">
-                        <td className="py-2 text-white/80">{preU.name}</td>
-                        <td className="py-2 text-white/60">{preU.duration}</td>
-                        <td className="py-2 text-right text-neon-green font-medium">{preU.cost}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+              Clear Filters
+            </button>
+          </motion.div>
+        )}
+      </div>
+
+      {/* Quick View Modal */}
+      <AnimatePresence>
+        {selectedItem && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedItem(null)}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ type: 'spring', duration: 0.5 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-space-800 border border-white/10 rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"
+            >
+              {/* Modal Header */}
+              <div className="sticky top-0 bg-space-800 border-b border-white/10 p-6 flex items-start justify-between">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getCategoryColor(selectedItem.category)}`}>
+                      {getCategoryIcon(selectedItem.category)} {selectedItem.category === 'preuni' ? 'Pre-University' : selectedItem.category === 'malaysia' ? 'Malaysian University' : 'Overseas University'}
+                    </span>
+                    {selectedItem.ranking && (
+                      <span className="px-3 py-1 rounded-full text-xs font-semibold bg-neon-yellow/20 text-neon-yellow">
+                        {selectedItem.ranking}
+                      </span>
+                    )}
+                  </div>
+                  <h2 className="text-2xl font-bold text-white">{selectedItem.name}</h2>
+                  <p className="text-white/60 mt-1">{selectedItem.subCategory}</p>
+                </div>
+                <button
+                  onClick={() => setSelectedItem(null)}
+                  className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+                >
+                  <X className="w-5 h-5 text-white/60" />
+                </button>
+              </div>
+
+              {/* Modal Content */}
+              <div className="p-6 space-y-6">
+                {/* Key Details Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Clock className="w-5 h-5 text-neon-blue" />
+                      <span className="text-sm text-white/60">Duration</span>
+                    </div>
+                    <p className="text-lg font-bold text-white">{selectedItem.duration}</p>
+                  </div>
+                  <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                    <div className="flex items-center gap-2 mb-2">
+                      <DollarSign className="w-5 h-5 text-neon-yellow" />
+                      <span className="text-sm text-white/60">Total Cost</span>
+                    </div>
+                    <p className="text-lg font-bold text-neon-yellow">{selectedItem.cost}</p>
+                  </div>
+                </div>
+
+                {/* Location */}
+                {selectedItem.country && (
+                  <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Globe className="w-5 h-5 text-neon-purple" />
+                      <span className="text-sm text-white/60">Location</span>
+                    </div>
+                    <p className="text-lg font-bold text-white">
+                      {getCountryFlag(selectedItem.country)} {selectedItem.country}
+                    </p>
+                  </div>
+                )}
+
+                {/* Description */}
+                {selectedItem.description && (
+                  <div>
+                    <h3 className="text-lg font-semibold text-white mb-2">About</h3>
+                    <p className="text-white/70 leading-relaxed">{selectedItem.description}</p>
+                  </div>
+                )}
+
+                {/* Institutions (for Pre-University) */}
+                {selectedItem.institutions && selectedItem.institutions.length > 0 && (
+                  <div>
+                    <h3 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
+                      <Building2 className="w-5 h-5 text-neon-green" />
+                      Available At
+                    </h3>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedItem.institutions.map((inst, idx) => (
+                        <span key={idx} className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-sm text-white/80">
+                          {inst}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Notes */}
+                {selectedItem.notes && !selectedItem.description && (
+                  <div>
+                    <h3 className="text-lg font-semibold text-white mb-2">Notes</h3>
+                    <p className="text-white/70 leading-relaxed">{selectedItem.notes}</p>
+                  </div>
+                )}
+
+                {/* CTA */}
+                <div className="pt-4 border-t border-white/10 flex flex-wrap gap-3">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => {
+                      setSelectedItem(null);
+                      dispatch({ type: 'NAVIGATE', page: 'scholarships' });
+                    }}
+                    className="flex-1 px-6 py-3 rounded-lg bg-gradient-to-r from-neon-blue to-neon-purple text-white font-semibold hover:shadow-lg hover:shadow-neon-blue/30 transition-all"
+                  >
+                    Find Scholarships →
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => {
+                      setSelectedItem(null);
+                      dispatch({ type: 'NAVIGATE', page: 'catalogue' });
+                    }}
+                    className="flex-1 px-6 py-3 rounded-lg bg-white/5 border border-white/10 text-white/80 hover:bg-white/10 transition-all font-medium"
+                  >
+                    Explore Careers
+                  </motion.button>
+                </div>
               </div>
             </motion.div>
           </motion.div>
         )}
-
-        {/* Malaysian Universities Tab */}
-        {tab === 'malaysia' && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            {/* Public Universities */}
-            <div className="mb-8">
-              <h3 className="font-display text-xl font-bold text-white mb-4 flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-neon-blue" />
-                Public Universities (IPTA)
-              </h3>
-              <p className="text-white/50 text-sm mb-4">Government-funded, more affordable for Malaysian students</p>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {filteredMalaysia.filter((u) => !u.notes?.includes('Premier') && !u.notes?.includes('Top Private')).map((uni, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.05 }}
-                    whileHover={{ y: -3 }}
-                    className="p-4 rounded-xl bg-white/5 border border-white/10 hover:border-neon-blue/30 transition-all"
-                  >
-                    <div className="flex items-start justify-between mb-2">
-                      <h5 className="text-sm font-semibold text-white/90 leading-tight">{uni.name}</h5>
-                      {uni.ranking && (
-                        <span className="text-xs px-2 py-0.5 rounded-full bg-neon-blue/10 text-neon-blue shrink-0 ml-2">
-                          {uni.ranking.split(' ').pop()}
-                        </span>
-                      )}
-                    </div>
-                    <div className="space-y-1.5 text-xs">
-                      <p className="text-white/60">{uni.program}</p>
-                      <div className="flex items-center gap-2 text-white/50">
-                        <Clock className="w-3 h-3" />
-                        <span>{uni.duration}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-neon-yellow">
-                        <DollarSign className="w-3 h-3" />
-                        <span>Annual: {uni.annualFee}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-neon-green font-medium">
-                        <span>Total: {uni.totalCost}</span>
-                      </div>
-                      {uni.notes && (
-                        <p className="text-white/40 italic mt-1">{uni.notes}</p>
-                      )}
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-
-            {/* Private Universities */}
-            <div className="mb-8">
-              <h3 className="font-display text-xl font-bold text-white mb-4 flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-neon-purple" />
-                Private Universities (IPTS)
-              </h3>
-              <p className="text-white/50 text-sm mb-4">Industry-focused programs with modern facilities</p>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {filteredMalaysia.filter((u) => u.notes?.includes('Top Private') || u.notes?.includes('Premier') || u.notes?.includes('industry') || u.notes?.includes('Petronas') || u.notes?.includes('Cyberjaya') || u.notes?.includes('Lancaster') || u.notes?.includes('affordable')).map((uni, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.05 }}
-                    whileHover={{ y: -3 }}
-                    className="p-4 rounded-xl bg-white/5 border border-neon-purple/20 hover:border-neon-purple/40 transition-all"
-                  >
-                    <div className="flex items-start justify-between mb-2">
-                      <h5 className="text-sm font-semibold text-white/90 leading-tight">{uni.name}</h5>
-                      {uni.ranking && (
-                        <span className="text-xs px-2 py-0.5 rounded-full bg-neon-purple/10 text-neon-purple shrink-0 ml-2">
-                          {uni.ranking.split(' ').pop()}
-                        </span>
-                      )}
-                    </div>
-                    <div className="space-y-1.5 text-xs">
-                      <p className="text-white/60">{uni.program}</p>
-                      <div className="flex items-center gap-2 text-white/50">
-                        <Clock className="w-3 h-3" />
-                        <span>{uni.duration}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-neon-yellow">
-                        <DollarSign className="w-3 h-3" />
-                        <span>Annual: {uni.annualFee}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-neon-green font-medium">
-                        <span>Total: {uni.totalCost}</span>
-                      </div>
-                      {uni.notes && (
-                        <p className="text-white/40 italic mt-1">{uni.notes}</p>
-                      )}
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-
-            {/* Summary */}
-            <div className="glass-strong rounded-2xl p-6">
-              <h4 className="font-display text-lg font-bold text-white mb-4">📊 Malaysian Education Cost Summary</h4>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                <div className="p-3 rounded-xl bg-neon-blue/10">
-                  <p className="text-xl font-bold text-neon-blue">RM 500-3K</p>
-                  <p className="text-xs text-white/50">STPM/Matriculation</p>
-                </div>
-                <div className="p-3 rounded-xl bg-neon-blue/10">
-                  <p className="text-xl font-bold text-neon-blue">RM 9K-32K</p>
-                  <p className="text-xs text-white/50">Public University (Total)</p>
-                </div>
-                <div className="p-3 rounded-xl bg-neon-purple/10">
-                  <p className="text-xl font-bold text-neon-purple">RM 54K-168K</p>
-                  <p className="text-xs text-white/50">Private University (Total)</p>
-                </div>
-                <div className="p-3 rounded-xl bg-neon-pink/10">
-                  <p className="text-xl font-bold text-neon-pink">RM 400K-600K</p>
-                  <p className="text-xs text-white/50">Medicine (Total)</p>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
-
-        {/* Overseas Universities Tab */}
-        {tab === 'overseas' && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            {/* Country Filter */}
-            <div className="flex flex-wrap gap-2 mb-6 justify-center">
-              {countries.map((country) => (
-                <button
-                  key={country}
-                  onClick={() => setCountryFilter(country)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                    countryFilter === country
-                      ? 'bg-neon-purple/20 text-neon-purple border border-neon-purple/30'
-                      : 'bg-white/5 text-white/60 hover:bg-white/10 border border-transparent'
-                  }`}
-                >
-                  {country === 'all' ? '🌏 All Countries' : `${getCountryFlag(country)} ${country}`}
-                </button>
-              ))}
-            </div>
-
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filteredOverseas.map((uni, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.03 }}
-                  whileHover={{ y: -3 }}
-                  className="p-4 rounded-xl bg-white/5 border border-white/10 hover:border-neon-purple/30 transition-all"
-                >
-                  <div className="flex items-start justify-between mb-2">
-                    <div>
-                      {uni.country && <span className="text-sm mr-1">{getCountryFlag(uni.country)}</span>}
-                      <h5 className="text-sm font-semibold text-white/90 leading-tight inline">{uni.name}</h5>
-                    </div>
-                    {uni.ranking && (
-                      <span className="text-xs px-2 py-0.5 rounded-full bg-neon-purple/10 text-neon-purple shrink-0 ml-2">
-                        {uni.ranking.split(' ').pop()}
-                      </span>
-                    )}
-                  </div>
-                  <div className="space-y-1.5 text-xs">
-                    <p className="text-white/60">{uni.program}</p>
-                    <div className="flex items-center gap-2 text-white/50">
-                      <Clock className="w-3 h-3" />
-                      <span>{uni.duration}</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-neon-yellow">
-                      <DollarSign className="w-3 h-3" />
-                      <span>Annual: {uni.annualFee}</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-neon-green font-medium">
-                      <span>Total: {uni.totalCost}</span>
-                    </div>
-                    {uni.notes && (
-                      <p className="text-white/40 italic mt-1">{uni.notes}</p>
-                    )}
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Summary */}
-            <div className="mt-8 glass-strong rounded-2xl p-6">
-              <h4 className="font-display text-lg font-bold text-white mb-4">📊 International Education Cost Summary</h4>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                <div className="p-3 rounded-xl bg-neon-green/10">
-                  <p className="text-lg font-bold text-neon-green">RM 50K-87K</p>
-                  <p className="text-xs text-white/50">🇯🇵 Japan / 🇰🇷 Korea</p>
-                </div>
-                <div className="p-3 rounded-xl bg-neon-blue/10">
-                  <p className="text-lg font-bold text-neon-blue">RM 312K-594K</p>
-                  <p className="text-xs text-white/50">🇦🇺 Australia</p>
-                </div>
-                <div className="p-3 rounded-xl bg-neon-purple/10">
-                  <p className="text-lg font-bold text-neon-purple">RM 345K-960K</p>
-                  <p className="text-xs text-white/50">🇬🇧 United Kingdom</p>
-                </div>
-                <div className="p-3 rounded-xl bg-neon-pink/10">
-                  <p className="text-lg font-bold text-neon-pink">RM 810K-1.1M</p>
-                  <p className="text-xs text-white/50">🇺🇸 United States</p>
-                </div>
-              </div>
-              <p className="text-xs text-white/40 text-center mt-4">
-                💡 Many overseas universities offer scholarships for Malaysian students. Check the Scholarships page for details.
-              </p>
-            </div>
-          </motion.div>
-        )}
-
-        {/* CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="mt-12 text-center"
-        >
-          <div className="glass-strong rounded-2xl p-8">
-            <h3 className="font-display text-xl font-bold text-white mb-3">
-              Need help choosing the right path?
-            </h3>
-            <p className="text-white/60 text-sm mb-6">
-              Take our career quiz to get personalized education and scholarship recommendations
-            </p>
-            <div className="flex flex-wrap gap-4 justify-center">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => dispatch({ type: 'NAVIGATE', page: 'quiz' })}
-                className="px-6 py-3 rounded-full bg-gradient-to-r from-neon-blue to-neon-purple text-white font-semibold"
-              >
-                Take Career Quiz 🎯
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => dispatch({ type: 'NAVIGATE', page: 'scholarships' })}
-                className="px-6 py-3 rounded-full glass text-white/70 hover:text-neon-yellow"
-              >
-                🎓 View Scholarships
-              </motion.button>
-            </div>
-          </div>
-        </motion.div>
-      </div>
+      </AnimatePresence>
     </div>
   );
 }
