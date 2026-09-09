@@ -53,7 +53,24 @@ export default function CareerDetailPage() {
   return (
     <div className="min-h-screen pt-20 pb-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto">
-        {/* Back Button */}
+        {/* Back to Recommended Careers button - Primary */}
+        {state.recommendedCareers.length > 0 && (
+          <motion.button
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            onClick={() => dispatch({ type: 'NAVIGATE', page: 'results' })}
+            className="w-full sm:w-auto mb-6 px-6 py-3 rounded-xl bg-gradient-to-r from-neon-blue/20 to-neon-purple/20 border border-neon-blue/30 text-white hover:from-neon-blue/30 hover:to-neon-purple/30 hover:border-neon-blue/50 hover:shadow-lg hover:shadow-neon-blue/20 transition-all duration-300 flex items-center justify-center gap-3 group"
+          >
+            <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-300" />
+            <span className="font-medium">Back to Recommended Careers</span>
+            <span className="hidden sm:inline text-xs px-2 py-1 rounded-full bg-neon-blue/20 text-neon-blue">
+              {state.recommendedCareers.length} matches
+            </span>
+          </motion.button>
+        )}
+
+        {/* Back to Catalogue button - Secondary */}
         <motion.button
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -61,7 +78,7 @@ export default function CareerDetailPage() {
           className="flex items-center gap-2 text-white/50 hover:text-white mb-8 transition-colors group"
         >
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-          <span className="text-sm">Back to Catalogue</span>
+          <span className="text-sm">Browse All Careers</span>
         </motion.button>
 
         {/* Hero Section */}
