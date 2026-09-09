@@ -4,7 +4,7 @@ import { Search, X, Briefcase, TrendingUp, DollarSign, GraduationCap, MapPin, He
 import { careers, Career } from '../data/careers';
 import { useApp } from '../store/AppContext';
 
-type FilterCategory = 'All' | 'IT' | 'STEM' | 'Healthcare';
+type FilterCategory = 'All' | 'IT' | 'STEM' | 'Healthcare' | 'Business' | 'Creative' | 'Education';
 
 export default function CataloguePage() {
   const { dispatch } = useApp();
@@ -12,7 +12,7 @@ export default function CataloguePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCareer, setSelectedCareer] = useState<Career | null>(null);
 
-  const filters: FilterCategory[] = ['All', 'IT', 'STEM', 'Healthcare'];
+  const filters: FilterCategory[] = ['All', 'IT', 'STEM', 'Healthcare', 'Business', 'Creative', 'Education'];
 
   const filteredCareers = useMemo(() => {
     return careers.filter((career) => {
@@ -31,6 +31,9 @@ export default function CataloguePage() {
       case 'IT': return { bg: 'bg-neon-blue/20', text: 'text-neon-blue', border: 'border-neon-blue/30' };
       case 'STEM': return { bg: 'bg-neon-green/20', text: 'text-neon-green', border: 'border-neon-green/30' };
       case 'Healthcare': return { bg: 'bg-neon-pink/20', text: 'text-neon-pink', border: 'border-neon-pink/30' };
+      case 'Business': return { bg: 'bg-neon-purple/20', text: 'text-neon-purple', border: 'border-neon-purple/30' };
+      case 'Creative': return { bg: 'bg-neon-orange/20', text: 'text-neon-orange', border: 'border-neon-orange/30' };
+      case 'Education': return { bg: 'bg-neon-yellow/20', text: 'text-neon-yellow', border: 'border-neon-yellow/30' };
       default: return { bg: 'bg-white/10', text: 'text-white/70', border: 'border-white/20' };
     }
   };
@@ -62,7 +65,7 @@ export default function CataloguePage() {
             Career Catalogue
           </h1>
           <p className="text-lg text-white/60 max-w-2xl mx-auto">
-            Discover high-demand careers in Malaysia with detailed pathways, scholarships, and university options.
+            Discover 31 high-demand careers across STEM, IT, Healthcare, Business, Creative & Education fields with detailed pathways, scholarships, and university options.
           </p>
         </motion.div>
 
@@ -104,6 +107,9 @@ export default function CataloguePage() {
                   {filter === 'IT' && '💻 '}
                   {filter === 'STEM' && '🔬 '}
                   {filter === 'Healthcare' && '🏥 '}
+                  {filter === 'Business' && '💼 '}
+                  {filter === 'Creative' && '🎨 '}
+                  {filter === 'Education' && '📚 '}
                   {filter}
                   {filter === 'All' && ` (${careers.length})`}
                   {filter !== 'All' && ` (${careers.filter(c => c.category === filter).length})`}

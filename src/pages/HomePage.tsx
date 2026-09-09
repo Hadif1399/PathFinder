@@ -36,7 +36,7 @@ export default function HomePage() {
   const features = [
     { icon: <Trophy className="w-6 h-6" />, title: 'Gamified Quiz', desc: '15 interactive questions with drag-and-drop, sliders & scenarios' },
     { icon: <Users className="w-6 h-6" />, title: 'AI-Powered', desc: 'Personalized career recommendations based on your unique profile' },
-    { icon: <BookOpen className="w-6 h-6" />, title: 'Career Catalogue', desc: 'Explore 10+ STEM & IT careers with Malaysian pathways' },
+    { icon: <BookOpen className="w-6 h-6" />, title: 'Career Catalogue', desc: 'Explore 31 diverse careers across STEM, IT, Healthcare, Business & more' },
     { icon: <GraduationCap className="w-6 h-6" />, title: 'Universities', desc: 'Compare 25+ local & international universities with detailed costs', action: () => dispatch({ type: 'NAVIGATE', page: 'universities' }) },
     { icon: <Award className="w-6 h-6" />, title: 'Pre-U Scholarships', desc: '12+ pre-university scholarships with interactive filtering', action: () => dispatch({ type: 'NAVIGATE', page: 'preuni-scholarships' }) },
     { icon: <Award className="w-6 h-6" />, title: 'Degree Scholarships', desc: '130+ Malaysian & international scholarships to fund your journey', action: () => dispatch({ type: 'NAVIGATE', page: 'scholarships' }) },
@@ -104,7 +104,7 @@ export default function HomePage() {
               {/* Stats */}
               <div className="mt-12 grid grid-cols-3 gap-6">
                 {[
-                  { num: '10+', label: 'STEM Careers' },
+                  { num: '31', label: 'Career Paths' },
                   { num: '15', label: 'Quiz Questions' },
                   { num: '100%', label: 'Free' },
                 ].map((stat, i) => (
