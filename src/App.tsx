@@ -1,6 +1,7 @@
 import { AppProvider, useApp } from './store/AppContext';
 import Navigation from './components/Navigation';
 import StarField from './components/StarField';
+import FloatingBot from './components/FloatingBot';
 import HomePage from './pages/HomePage';
 import QuizPage from './pages/QuizPage';
 import ResultsPage from './pages/ResultsPage';
@@ -66,6 +67,7 @@ function AppContent() {
           {renderPage()}
         </motion.main>
       </AnimatePresence>
+      <FloatingBot />
     </div>
   );
 }
