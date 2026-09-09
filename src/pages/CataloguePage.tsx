@@ -39,7 +39,7 @@ export default function CataloguePage() {
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-4"><Sparkles className="w-4 h-4 text-neon-yellow" /><span className="text-sm text-white/80">Explore Malaysia's Top Careers</span></div>
           <h1 className="font-display text-4xl sm:text-5xl font-bold text-white mb-4">Career Catalogue</h1>
-          <p className="text-lg text-white/60 max-w-2xl mx-auto">Discover high-demand careers across STEM, IT, Healthcare, Business, Creative & Education fields.</p>
+          <p className="text-lg text-white/60 max-w-2xl mx-auto">Discover 36 high-demand careers across STEM, IT, Healthcare, Business, Creative & Education fields.</p>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="sticky top-20 z-30 mb-8">

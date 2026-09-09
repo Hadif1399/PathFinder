@@ -290,6 +290,27 @@ function calculateRecommendations(answers: Record<number, string | number | stri
     if (career.id === 'teacher') score += (scores['education'] || 0) * 2 + (scores['teaching'] || 0) * 2;
     if (career.id === 'graphic-designer') score += (scores['creative'] || 0) * 2;
     if (career.id === 'entrepreneur') score += (scores['entrepreneur'] || 0) * 3;
+    if (career.id === 'biotechnologist') score += (scores['biotech'] || 0) * 3;
+    if (career.id === 'veterinarian') score += (scores['healthcare'] || 0) * 2;
+    if (career.id === 'nurse') score += (scores['healthcare'] || 0) * 2 + (scores['social'] || 0) * 1;
+    if (career.id === 'pharmacist') score += (scores['healthcare'] || 0) * 2 + (scores['research'] || 0) * 1;
+    if (career.id === 'mechanical-engineer') score += (scores['engineering'] || 0) * 2;
+    if (career.id === 'electrical-engineer') score += (scores['engineering'] || 0) * 2;
+    if (career.id === 'civil-engineer') score += (scores['engineering'] || 0) * 1.5 + (scores['creative'] || 0) * 0.5;
+    if (career.id === 'chemical-engineer') score += (scores['engineering'] || 0) * 1.5 + (scores['research'] || 0) * 1;
+    if (career.id === 'pilot') score += (scores['field'] || 0) * 2;
+    if (career.id === 'lecturer') score += (scores['education'] || 0) * 2 + (scores['research'] || 0) * 1;
+    if (career.id === 'data-analyst') score += (scores['data'] || 0) * 2 + (scores['analytical'] || 0) * 2;
+    if (career.id === 'investment-banking-analyst') score += (scores['finance'] || 0) * 3;
+    if (career.id === 'mathematician') score += (scores['math'] || 0) * 3;
+    if (career.id === 'statistician') score += (scores['data'] || 0) * 2 + (scores['math'] || 0) * 2;
+    if (career.id === 'physicist') score += (scores['research'] || 0) * 2 + (scores['math'] || 0) * 2;
+    if (career.id === 'animator') score += (scores['creative'] || 0) * 2;
+    if (career.id === 'video-game-designer') score += (scores['gaming'] || 0) * 2 + (scores['creative'] || 0) * 1;
+    if (career.id === 'radio-host') score += (scores['creative'] || 0) * 1 + (scores['communication'] || 0) * 2;
+    if (career.id === 'clinical-researcher') score += (scores['research'] || 0) * 2 + (scores['healthcare'] || 0) * 1;
+    if (career.id === 'botanist' || career.id === 'zoologist') score += (scores['environment'] || 0) * 2 + (scores['research'] || 0) * 1;
+    if (career.id === 'automotive-technician') score += (scores['engineering'] || 0) * 1;
     careerScores[career.id] = score + Math.random() * 2;
   });
 

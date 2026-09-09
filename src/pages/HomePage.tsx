@@ -3,7 +3,7 @@ import { useApp } from '../store/AppContext';
 import { Sparkles, ArrowRight, Trophy, Users, BookOpen, Award, GraduationCap, Zap, TrendingUp, Star, Compass } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
-const typewriterTexts = ["Navigate Your Future with AI", "Discover Your Dream Career", "31 Careers. Infinite Possibilities."];
+const typewriterTexts = ["Navigate Your Future with AI", "Discover Your Dream Career", "36 Careers. Infinite Possibilities."];
 
 export default function HomePage() {
   const { dispatch } = useApp();
@@ -31,7 +31,7 @@ export default function HomePage() {
   const features = [
     { icon: <Trophy className="w-6 h-6" />, title: 'Interactive Quiz', desc: '18 engaging questions with timers, streaks & fun facts', color: 'from-neon-blue to-neon-purple' },
     { icon: <Users className="w-6 h-6" />, title: 'AI-Powered', desc: 'Smart matching across 31 diverse career paths', color: 'from-neon-purple to-neon-pink' },
-    { icon: <BookOpen className="w-6 h-6" />, title: 'Career Catalogue', desc: 'Explore STEM, IT, Healthcare, Business & Creative fields', color: 'from-neon-pink to-neon-orange' },
+    { icon: <BookOpen className="w-6 h-6" />, title: 'Career Catalogue', desc: 'Explore 36 diverse careers across all fields', color: 'from-neon-pink to-neon-orange' },
     { icon: <GraduationCap className="w-6 h-6" />, title: 'Education Paths', desc: 'Compare 25+ universities with detailed costs', color: 'from-neon-orange to-neon-yellow', action: () => dispatch({ type: 'NAVIGATE', page: 'universities' }) },
     { icon: <Award className="w-6 h-6" />, title: 'Scholarships', desc: '130+ Malaysian & international funding opportunities', color: 'from-neon-yellow to-neon-green', action: () => dispatch({ type: 'NAVIGATE', page: 'scholarships' }) },
     { icon: <Star className="w-6 h-6" />, title: 'Career Roadmaps', desc: 'Visual journey from SPM to senior roles', color: 'from-neon-green to-neon-blue' },
@@ -64,7 +64,7 @@ export default function HomePage() {
               </h1>
 
               <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="text-xl text-white/70 mb-10 max-w-xl leading-relaxed">
-                Take our <span className="text-neon-blue font-semibold">gamified 18-question quiz</span> and let AI guide you to the perfect career from <span className="text-neon-purple font-semibold">31+ options</span>. Explore scholarships, universities, and career roadmaps.
+                Take our <span className="text-neon-blue font-semibold">gamified 18-question quiz</span> and let AI guide you to the perfect career from <span className="text-neon-purple font-semibold">36 options</span>. Explore scholarships, universities, and career roadmaps.
               </motion.p>
 
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }} className="flex flex-wrap gap-4 mb-12">
@@ -78,13 +78,13 @@ export default function HomePage() {
                   <motion.div className="absolute inset-0 bg-gradient-to-r from-neon-purple via-neon-pink to-neon-blue" initial={{ x: "-100%" }} whileHover={{ x: "0%" }} transition={{ duration: 0.5 }} />
                 </motion.button>
                 <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => dispatch({ type: 'NAVIGATE', page: 'catalogue' })} className="px-10 py-5 rounded-2xl glass-strong text-white font-bold text-lg hover:bg-white/10 transition-all border border-white/20">
-                  Browse 31 Careers
+                  Browse 36 Careers
                 </motion.button>
               </motion.div>
 
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }} className="grid grid-cols-3 gap-8">
                 {[
-                  { num: '31', label: 'Career Paths', icon: <TrendingUp className="w-5 h-5" /> },
+                  { num: '36', label: 'Career Paths', icon: <TrendingUp className="w-5 h-5" /> },
                   { num: '18', label: 'Quiz Questions', icon: <Zap className="w-5 h-5" /> },
                   { num: '130+', label: 'Scholarships', icon: <Award className="w-5 h-5" /> },
                 ].map((stat, i) => (
