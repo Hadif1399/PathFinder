@@ -1,10 +1,10 @@
-export interface PreUniversityScholarship {
+export interface PreUniScholarship {
   id: string;
   name: string;
   institution: string;
   amount: string;
   deadline: string;
-  category: 'STEM' | 'Merit' | 'Need-Based' | 'Sports' | 'Arts';
+  category: 'Merit' | 'STEM' | 'Need-Based' | 'Sports' | 'Arts';
   eligibility: string[];
   benefits: string[];
   requirements: string[];
@@ -12,7 +12,7 @@ export interface PreUniversityScholarship {
   website?: string;
 }
 
-export const preUniversityScholarships: PreUniversityScholarship[] = [
+export const preUniScholarships: PreUniScholarship[] = [
   {
     id: 'jpa-pc',
     name: 'JPA Program Cemerlang',
@@ -25,6 +25,18 @@ export const preUniversityScholarships: PreUniversityScholarship[] = [
     requirements: ['Excellent SPM results (8A+)', 'Strong co-curriculum record', 'Good health', 'Pass interview'],
     description: 'The most prestigious pre-university scholarship in Malaysia for top SPM achievers. Covers Foundation/A-Levels/STPM and continues to degree level.',
     website: 'https://www.jpa.gov.my',
+  },
+  {
+    id: 'jpa-pkn',
+    name: 'JPA Program Penajaan Nasional',
+    institution: 'Jabatan Perkhidmatan Awam',
+    amount: 'Full Sponsorship',
+    deadline: 'April 2025',
+    category: 'Merit',
+    eligibility: ['SPM with 7A+ minimum', 'Malaysian citizen', 'Under 20 years old'],
+    benefits: ['Full tuition fees', 'Monthly allowance RM 400', 'Accommodation support', 'Overseas placement available'],
+    requirements: ['Strong SPM results', 'Good character reference', 'Pass aptitude test', 'Interview'],
+    description: 'National sponsorship program for high-achieving students. Includes local and overseas study options.',
   },
   {
     id: 'mara-ypm',
@@ -40,6 +52,18 @@ export const preUniversityScholarships: PreUniversityScholarship[] = [
     website: 'https://www.mara.gov.my',
   },
   {
+    id: 'mara-pkp',
+    name: 'MARA Pendidikan Khas',
+    institution: 'MARA',
+    amount: 'Full Sponsorship',
+    deadline: 'May 2025',
+    category: 'Need-Based',
+    eligibility: ['Bumiputera students', 'Family income below RM 4,000/month', 'SPM with 5A+ minimum'],
+    benefits: ['Full tuition coverage', 'Monthly allowance RM 350', 'Book allowance RM 500', 'Transport allowance'],
+    requirements: ['Proof of family income', 'Good academic record', 'Active co-curriculum', 'Recommendation letter'],
+    description: 'Financial assistance for deserving Bumiputera students from lower-income families to access quality pre-university education.',
+  },
+  {
     id: 'khazanah-watan',
     name: 'Khazanah Watan Scholarship',
     institution: 'Yayasan Khazanah',
@@ -51,6 +75,18 @@ export const preUniversityScholarships: PreUniversityScholarship[] = [
     requirements: ['Excellent academic record', 'Leadership experience', 'Community service involvement', 'Strong essay writing'],
     description: 'Prestigious scholarship for high-achieving students from middle-income families. Includes leadership development and industry exposure.',
     website: 'https://www.yayasankhazanah.com.my',
+  },
+  {
+    id: 'khazanah-global',
+    name: 'Khazanah Global Scholarship',
+    institution: 'Yayasan Khazanah',
+    amount: 'Full Overseas',
+    deadline: 'June 2025',
+    category: 'Merit',
+    eligibility: ['SPM with 8A+', 'Outstanding leadership', 'Malaysian citizen'],
+    benefits: ['Full overseas tuition', 'Monthly allowance USD 800', 'Top global universities', 'Bond with Khazanah'],
+    requirements: ['Exceptional SPM results', 'Outstanding extracurriculars', 'Strong interview performance', 'Leadership portfolio'],
+    description: 'Elite scholarship for top students to study at world-class universities overseas. Includes bond to work with Khazanah.',
   },
   {
     id: 'petronas-education',
@@ -66,17 +102,16 @@ export const preUniversityScholarships: PreUniversityScholarship[] = [
     website: 'https://www.petronas.com',
   },
   {
-    id: 'yayasan-ukhuwwah',
-    name: 'Yayasan Ukhuwwah Scholarship',
-    institution: 'Yayasan Ukhuwwah',
-    amount: 'RM 15,000/year',
-    deadline: 'February 2025',
-    category: 'Need-Based',
-    eligibility: ['Family income below RM 4,000/month', 'SPM with minimum 5A', 'Malaysian citizen'],
-    benefits: ['Tuition fee coverage', 'Monthly allowance RM 400', 'Book allowance RM 500', 'Transport allowance'],
-    requirements: ['Proof of family income', 'Good academic record', 'Active in school activities', 'Recommendation letter from school'],
-    description: 'Financial assistance for deserving students from low-income families to pursue pre-university education without financial burden.',
-    website: 'https://www.yayasanukhuwwah.org',
+    id: 'petronas-technical',
+    name: 'Petronas Technical Scholarship',
+    institution: 'Petronas',
+    amount: 'Full + Technical Training',
+    deadline: 'July 2025',
+    category: 'STEM',
+    eligibility: ['SPM with 6A+ in technical subjects', 'Malaysian citizen', 'Interest in oil & gas'],
+    benefits: ['Technical diploma sponsorship', 'Monthly allowance RM 500', 'Hands-on training', 'Employment at Petronas'],
+    requirements: ['Strong technical subjects', 'Physical fitness', 'Pass technical assessment', 'Interview'],
+    description: 'Technical-focused scholarship for students interested in hands-on engineering and technical roles in the oil & gas industry.',
   },
   {
     id: 'sime-darby-foundation',
@@ -90,6 +125,19 @@ export const preUniversityScholarships: PreUniversityScholarship[] = [
     requirements: ['Excellent SPM results', 'Proven leadership skills', 'Community involvement', 'Pass selection interview'],
     description: 'Comprehensive scholarship focusing on developing future leaders. Includes extensive leadership development programs.',
     website: 'https://www.simedarbyfoundation.com',
+  },
+  {
+    id: 'yayasan-ukhuwwah',
+    name: 'Yayasan Ukhuwwah Scholarship',
+    institution: 'Yayasan Ukhuwwah',
+    amount: 'RM 15,000/year',
+    deadline: 'February 2025',
+    category: 'Need-Based',
+    eligibility: ['Family income below RM 4,000/month', 'SPM with minimum 5A', 'Malaysian citizen'],
+    benefits: ['Tuition fee coverage', 'Monthly allowance RM 400', 'Book allowance RM 500', 'Transport allowance'],
+    requirements: ['Proof of family income', 'Good academic record', 'Active in school activities', 'Recommendation letter from school'],
+    description: 'Financial assistance for deserving students from low-income families to pursue pre-university education without financial burden.',
+    website: 'https://www.yayasanukhuwwah.org',
   },
   {
     id: 'bnm-kijang',
@@ -168,5 +216,53 @@ export const preUniversityScholarships: PreUniversityScholarship[] = [
     requirements: ['Strong in Physics and Mathematics', 'Pass TNB assessment', 'Good health', 'Interview with TNB panel'],
     description: 'Sponsorship for future energy sector professionals. Focus on electrical and mechanical engineering disciplines.',
     website: 'https://www.tnb.com.my',
+  },
+  {
+    id: 'pnb-scholarship',
+    name: 'PNB Scholarship',
+    institution: 'Permodalan Nasional Berhad',
+    amount: 'Full + Overseas',
+    deadline: 'February 2025',
+    category: 'Merit',
+    eligibility: ['Bumiputera students', 'SPM with 8A+', 'Strong leadership'],
+    benefits: ['Full overseas tuition', 'Monthly allowance USD 600', 'Top global universities', 'Bond with PNB'],
+    requirements: ['Exceptional SPM results', 'Outstanding extracurriculars', 'Strong interview', 'Leadership portfolio'],
+    description: 'Elite scholarship for Bumiputera students to study at top global universities with bond to PNB.',
+  },
+  {
+    id: 'yayasan-terengganu',
+    name: 'Yayasan Terengganu Scholarship',
+    institution: 'Yayasan Terengganu',
+    amount: 'Full Sponsorship',
+    deadline: 'March 2025',
+    category: 'Merit',
+    eligibility: ['Terengganu born students', 'SPM with 7A+', 'Malaysian citizen'],
+    benefits: ['Full tuition coverage', 'Monthly allowance RM 500', 'Local or overseas study', 'Mentorship program'],
+    requirements: ['Excellent SPM results', 'Good character', 'Pass interview', 'Terengganu birth certificate'],
+    description: 'State scholarship for Terengganu students to pursue pre-university and degree education.',
+  },
+  {
+    id: 'mdec-scholarship',
+    name: 'MDEC Digital Scholarship',
+    institution: 'Malaysia Digital Economy Corporation',
+    amount: 'RM 30,000/year',
+    deadline: 'April 2025',
+    category: 'STEM',
+    eligibility: ['SPM with 6A+ in STEM/IT', 'Interest in digital economy', 'Malaysian citizen'],
+    benefits: ['Tuition coverage', 'Monthly allowance RM 400', 'Digital skills training', 'Industry mentorship'],
+    requirements: ['Strong STEM/IT results', 'Pass digital assessment', 'Project portfolio', 'Interview'],
+    description: 'Scholarship for students passionate about Malaysia\'s digital economy transformation.',
+  },
+  {
+    id: 'cradle-scholarship',
+    name: 'Cradle Fund Scholarship',
+    institution: 'Cradle Fund',
+    amount: 'RM 25,000/year',
+    deadline: 'May 2025',
+    category: 'STEM',
+    eligibility: ['SPM with 6A+', 'Entrepreneurial mindset', 'Malaysian citizen'],
+    benefits: ['Tuition coverage', 'Monthly allowance RM 350', 'Entrepreneurship training', 'Startup incubation'],
+    requirements: ['Good academic record', 'Business idea pitch', 'Pass interview', 'Entrepreneurial potential'],
+    description: 'Supporting future entrepreneurs with education and startup incubation opportunities.',
   },
 ];

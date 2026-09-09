@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, X, Briefcase, TrendingUp, DollarSign, Star, ArrowRight, Sparkles } from 'lucide-react';
+import { Search, X, Briefcase, TrendingUp, DollarSign, Star, ArrowRight, Sparkles, GraduationCap, Award } from 'lucide-react';
 import { careers, Career } from '../data/careers';
 import { useApp } from '../store/AppContext';
 
@@ -128,9 +128,38 @@ export default function CataloguePage() {
                   <p className="text-white/70 leading-relaxed">{selectedCareer.description}</p>
                 </div>
                 <div>
+                  <h3 className="text-lg font-semibold text-white mb-3 flex items-center gap-2"><GraduationCap className="w-5 h-5 text-neon-blue" />SPM Requirements</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {selectedCareer.spmRequirements.slice(0, 4).map((req, i) => (
+                      <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/5">
+                        <span className="text-white/80 text-sm">{req.subject}</span>
+                        <span className="text-neon-green text-xs font-medium px-2 py-1 rounded-full bg-green-500/10">{req.grade}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div>
                   <h3 className="text-lg font-semibold text-white mb-3">Ideal Personality Traits</h3>
                   <div className="flex flex-wrap gap-2">
                     {selectedCareer.personalityTraits.map((trait) => (<span key={trait} className="px-3 py-1.5 rounded-full bg-neon-pink/10 text-neon-pink text-sm">{trait}</span>))}
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-white mb-3 flex items-center gap-2"><Award className="w-5 h-5 text-neon-yellow" />Education Pathways</h3>
+                  <div className="space-y-2">
+                    {selectedCareer.pathways.slice(0, 2).map((pathway, i) => (
+                      <div key={i} className="p-3 rounded-lg bg-white/5 border border-white/5">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-white/90 text-sm font-medium">{pathway.type}</span>
+                          <span className="text-neon-blue text-xs">{pathway.duration}</span>
+                        </div>
+                        <div className="flex flex-wrap gap-1">
+                          {pathway.institutions.slice(0, 3).map((inst) => (
+                            <span key={inst} className="text-xs text-white/50 px-2 py-0.5 rounded bg-white/5">{inst}</span>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
                 <div className="flex flex-wrap gap-3 pt-4 border-t border-white/10">
