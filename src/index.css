@@ -1,1 +1,96 @@
 @import "tailwindcss";
+
+@theme {
+  --color-space-900: #0a0e1a;
+  --color-space-800: #111827;
+  --color-space-700: #1a2235;
+  --color-space-600: #243049;
+  --color-neon-blue: #00d4ff;
+  --color-neon-purple: #a855f7;
+  --color-neon-green: #22d3ee;
+  --color-neon-pink: #f472b6;
+  --color-neon-orange: #fb923c;
+  --color-neon-yellow: #fbbf24;
+  --font-sans: 'Inter', sans-serif;
+  --font-display: 'Space Grotesk', sans-serif;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #243049 #0a0e1a;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #0a0e1a;
+  overflow-x: hidden;
+}
+
+.font-display {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(0, 212, 255, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(0, 212, 255, 0.6); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-strong {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(30px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #00d4ff, #a855f7, #f472b6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-border {
+  position: relative;
+  background: #111827;
+  border-radius: 1rem;
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 1rem;
+  padding: 1px;
+  background: linear-gradient(135deg, #00d4ff, #a855f7, #f472b6);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
