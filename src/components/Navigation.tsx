@@ -20,11 +20,11 @@ export default function Navigation() {
             whileHover={{ scale: 1.05 }}
             onClick={() => dispatch({ type: 'NAVIGATE', page: 'home' })}
           >
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-neon-blue to-neon-purple flex items-center justify-center">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-neon-blue via-neon-purple to-neon-pink flex items-center justify-center shadow-lg shadow-neon-blue/30">
               <Compass className="w-5 h-5 text-white" />
             </div>
-            <span className="font-display font-bold text-lg text-white">
-              PathFinder<span className="text-neon-blue">AI</span>
+            <span className="font-display font-bold text-xl text-white">
+              Career<span className="gradient-text">Compass</span>
             </span>
           </motion.div>
 
