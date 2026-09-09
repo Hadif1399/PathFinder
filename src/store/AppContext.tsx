@@ -1,6 +1,6 @@
 import { createContext, useContext, useReducer, ReactNode } from 'react';
 
-export type AppPage = 'home' | 'quiz' | 'results' | 'catalogue' | 'career-detail' | 'certificate' | 'roadmap' | 'scholarships';
+export type AppPage = 'home' | 'quiz' | 'results' | 'catalogue' | 'career-detail' | 'certificate' | 'roadmap' | 'scholarships' | 'universities';
 
 interface AppState {
   currentPage: AppPage;

@@ -1,7 +1,8 @@
 import { motion } from 'framer-motion';
 import { useApp } from '../store/AppContext';
 import { careers } from '../data/careers';
-import { ArrowLeft, BookOpen, Briefcase, GraduationCap, Heart, Play, Star, Award, Globe, MapPin } from 'lucide-react';
+import { commonPreUniversity, universitiesMalaysia, universitiesOverseas } from '../data/education';
+import { ArrowLeft, BookOpen, Briefcase, GraduationCap, Heart, Play, Star, Award, Globe, MapPin, DollarSign, Building2 } from 'lucide-react';
 
 export default function CareerDetailPage() {
   const { state, dispatch } = useApp();
@@ -132,67 +133,395 @@ export default function CareerDetailPage() {
               </div>
             </div>
           </motion.div>
-
-          {/* Post-SPM Pathways */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="glass rounded-2xl p-6"
-          >
-            <h3 className="font-display text-lg font-bold text-white mb-4 flex items-center gap-2">
-              <BookOpen className="w-5 h-5 text-neon-green" />
-              Post-SPM Pathways
-            </h3>
-            <div className="space-y-4">
-              {career.pathways.map((pathway, i) => (
-                <div key={i} className="p-3 rounded-xl bg-white/5">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-white/90 text-sm font-medium">{pathway.type}</span>
-                    <span className="text-neon-blue text-xs">{pathway.duration}</span>
-                  </div>
-                  <div className="flex flex-wrap gap-1">
-                    {pathway.institutions.map((inst) => (
-                      <span key={inst} className="text-xs text-white/50 px-2 py-0.5 rounded bg-white/5">
-                        {inst}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Work Environment */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="glass rounded-2xl p-6"
-          >
-            <h3 className="font-display text-lg font-bold text-white mb-4 flex items-center gap-2">
-              <Briefcase className="w-5 h-5 text-neon-orange" />
-              Day in the Life
-            </h3>
-            <p className="text-white/60 text-sm mb-4">{career.workEnvironment}</p>
-            <div className="space-y-2">
-              {career.dayInLife.map((activity, i) => (
-                <div key={i} className="flex items-start gap-3 text-sm">
-                  <span className="text-neon-blue text-xs font-mono min-w-[60px]">
-                    {activity.split(' - ')[0]}
-                  </span>
-                  <span className="text-white/70">{activity.split(' - ')[1]}</span>
-                </div>
-              ))}
-            </div>
-          </motion.div>
         </div>
+
+        {/* EDUCATION PATHWAYS SECTION */}
+        
+        {/* Pre-University Options */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.35 }}
+          className="glass-strong rounded-2xl p-6 mb-8"
+        >
+          <h3 className="font-display text-lg font-bold text-white mb-2 flex items-center gap-2">
+            <BookOpen className="w-5 h-5 text-neon-green" />
+            Pre-University Pathways
+          </h3>
+          <p className="text-white/50 text-sm mb-6">
+            Choose your pathway after SPM to prepare for university
+          </p>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {commonPreUniversity.map((preU, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 + i * 0.05 }}
+                whileHover={{ scale: 1.02 }}
+                className="p-4 rounded-xl bg-white/5 border border-white/10 hover:border-neon-green/30 transition-all"
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <h5 className="text-sm font-semibold text-white/90">{preU.name}</h5>
+                  <span className="text-xs px-2 py-0.5 rounded-full bg-neon-green/10 text-neon-green">
+                    {preU.type}
+                  </span>
+                </div>
+                <div className="space-y-2 text-xs">
+                  <div className="flex items-center gap-2 text-white/60">
+                    <span>⏱️</span>
+                    <span>{preU.duration}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-neon-yellow">
+                    <DollarSign className="w-3 h-3" />
+                    <span className="font-medium">{preU.cost}</span>
+                  </div>
+                  <div className="flex items-start gap-2 text-white/50">
+                    <Building2 className="w-3 h-3 mt-0.5 shrink-0" />
+                    <span className="line-clamp-2">{preU.institutions.slice(0, 3).join(', ')}{preU.institutions.length > 3 ? '...' : ''}</span>
+                  </div>
+                  {preU.notes && (
+                    <p className="text-white/40 italic mt-1 text-xs">{preU.notes}</p>
+                  )}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Malaysian Universities */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          className="glass-strong rounded-2xl p-6 mb-8"
+        >
+          <h3 className="font-display text-lg font-bold text-white mb-2 flex items-center gap-2">
+            <MapPin className="w-5 h-5 text-neon-blue" />
+            🇲🇾 Malaysian Universities
+          </h3>
+          <p className="text-white/50 text-sm mb-6">
+            Top universities in Malaysia offering relevant programs
+          </p>
+
+          {/* Public Universities */}
+          <div className="mb-6">
+            <h4 className="text-sm font-semibold text-white/70 mb-3 flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-neon-blue" />
+              Public Universities (More Affordable)
+            </h4>
+            <div className="grid sm:grid-cols-2 gap-3">
+              {universitiesMalaysia.publicTop.map((uni, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.55 + i * 0.05 }}
+                  whileHover={{ scale: 1.02 }}
+                  className="p-4 rounded-xl bg-white/5 border border-white/10 hover:border-neon-blue/30 transition-all"
+                >
+                  <div className="flex items-start justify-between mb-2">
+                    <h5 className="text-sm font-semibold text-white/90 leading-tight">{uni.name}</h5>
+                    {uni.ranking && (
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-neon-blue/10 text-neon-blue shrink-0 ml-2">
+                        {uni.ranking.split(' ').pop()}
+                      </span>
+                    )}
+                  </div>
+                  <div className="space-y-1.5 text-xs">
+                    <p className="text-white/60">{uni.program}</p>
+                    <div className="flex items-center gap-2 text-white/50">
+                      <span>⏱️ {uni.duration}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-neon-yellow">
+                      <DollarSign className="w-3 h-3" />
+                      <span>Annual: {uni.annualFee}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-neon-green font-medium">
+                      <span>Total: {uni.totalCost}</span>
+                    </div>
+                    {uni.notes && (
+                      <p className="text-white/40 italic mt-1">{uni.notes}</p>
+                    )}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          {/* Private Universities */}
+          <div className="mb-6">
+            <h4 className="text-sm font-semibold text-white/70 mb-3 flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-neon-purple" />
+              Private Universities
+            </h4>
+            <div className="grid sm:grid-cols-2 gap-3">
+              {universitiesMalaysia.privateTop.map((uni, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6 + i * 0.05 }}
+                  whileHover={{ scale: 1.02 }}
+                  className="p-4 rounded-xl bg-gradient-to-br from-neon-purple/5 to-transparent border border-neon-purple/20 hover:border-neon-purple/40 transition-all"
+                >
+                  <div className="flex items-start justify-between mb-2">
+                    <h5 className="text-sm font-semibold text-white/90 leading-tight">{uni.name}</h5>
+                    {uni.ranking && (
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-neon-purple/10 text-neon-purple shrink-0 ml-2">
+                        {uni.ranking.split(' ').pop()}
+                      </span>
+                    )}
+                  </div>
+                  <div className="space-y-1.5 text-xs">
+                    <p className="text-white/60">{uni.program}</p>
+                    <div className="flex items-center gap-2 text-white/50">
+                      <span>⏱️ {uni.duration}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-neon-yellow">
+                      <DollarSign className="w-3 h-3" />
+                      <span>Annual: {uni.annualFee}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-neon-green font-medium">
+                      <span>Total: {uni.totalCost}</span>
+                    </div>
+                    {uni.notes && (
+                      <p className="text-white/40 italic mt-1">{uni.notes}</p>
+                    )}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          {/* Cost Comparison Summary */}
+          <div className="p-4 rounded-xl bg-gradient-to-r from-neon-blue/10 to-neon-purple/10 border border-white/5">
+            <h5 className="text-sm font-semibold text-white/80 mb-2">💡 Cost Comparison Summary</h5>
+            <div className="grid grid-cols-2 gap-4 text-center">
+              <div>
+                <p className="text-lg font-bold text-neon-blue">RM 9K - 32K</p>
+                <p className="text-xs text-white/50">Public Universities (Total)</p>
+              </div>
+              <div>
+                <p className="text-lg font-bold text-neon-purple">RM 54K - 220K</p>
+                <p className="text-xs text-white/50">Private Universities (Total)</p>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Overseas Universities */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7 }}
+          className="glass-strong rounded-2xl p-6 mb-8"
+        >
+          <h3 className="font-display text-lg font-bold text-white mb-2 flex items-center gap-2">
+            <Globe className="w-5 h-5 text-neon-purple" />
+            🌏 International Universities
+          </h3>
+          <p className="text-white/50 text-sm mb-6">
+            Top universities abroad for Malaysian students
+          </p>
+
+          {/* Singapore */}
+          <div className="mb-6">
+            <h4 className="text-sm font-semibold text-white/70 mb-3 flex items-center gap-2">
+              <span>🇸🇬</span> Singapore
+            </h4>
+            <div className="grid sm:grid-cols-2 gap-3">
+              {universitiesOverseas.singapore.map((uni, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.75 + i * 0.05 }}
+                  whileHover={{ scale: 1.02 }}
+                  className="p-4 rounded-xl bg-white/5 border border-white/10 hover:border-neon-purple/30 transition-all"
+                >
+                  <div className="flex items-start justify-between mb-2">
+                    <h5 className="text-sm font-semibold text-white/90 leading-tight">{uni.name}</h5>
+                    {uni.ranking && (
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-neon-purple/10 text-neon-purple shrink-0 ml-2">
+                        {uni.ranking.split(' ').pop()}
+                      </span>
+                    )}
+                  </div>
+                  <div className="space-y-1.5 text-xs">
+                    <p className="text-white/60">{uni.program}</p>
+                    <div className="flex items-center gap-2 text-white/50">
+                      <span>⏱️ {uni.duration}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-neon-yellow">
+                      <DollarSign className="w-3 h-3" />
+                      <span>Annual: {uni.annualFee}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-neon-green font-medium">
+                      <span>Total: {uni.totalCost}</span>
+                    </div>
+                    {uni.notes && (
+                      <p className="text-white/40 italic mt-1">{uni.notes}</p>
+                    )}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          {/* Australia */}
+          <div className="mb-6">
+            <h4 className="text-sm font-semibold text-white/70 mb-3 flex items-center gap-2">
+              <span>🇦🇺</span> Australia
+            </h4>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {universitiesOverseas.australia.map((uni, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.8 + i * 0.05 }}
+                  whileHover={{ scale: 1.02 }}
+                  className="p-4 rounded-xl bg-white/5 border border-white/10 hover:border-neon-purple/30 transition-all"
+                >
+                  <h5 className="text-sm font-semibold text-white/90 leading-tight mb-2">{uni.name}</h5>
+                  <div className="space-y-1.5 text-xs">
+                    <p className="text-white/60">{uni.program}</p>
+                    <div className="text-neon-green font-medium">Total: {uni.totalCost}</div>
+                    {uni.ranking && <p className="text-neon-purple text-xs">{uni.ranking}</p>}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          {/* UK */}
+          <div className="mb-6">
+            <h4 className="text-sm font-semibold text-white/70 mb-3 flex items-center gap-2">
+              <span>🇬🇧</span> United Kingdom
+            </h4>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {universitiesOverseas.uk.map((uni, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.85 + i * 0.05 }}
+                  whileHover={{ scale: 1.02 }}
+                  className="p-4 rounded-xl bg-white/5 border border-white/10 hover:border-neon-purple/30 transition-all"
+                >
+                  <h5 className="text-sm font-semibold text-white/90 leading-tight mb-2">{uni.name}</h5>
+                  <div className="space-y-1.5 text-xs">
+                    <p className="text-white/60">{uni.program}</p>
+                    <div className="text-neon-green font-medium">Total: {uni.totalCost}</div>
+                    {uni.ranking && <p className="text-neon-purple text-xs">{uni.ranking}</p>}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          {/* USA */}
+          <div className="mb-6">
+            <h4 className="text-sm font-semibold text-white/70 mb-3 flex items-center gap-2">
+              <span>🇺🇸</span> United States
+            </h4>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {universitiesOverseas.usa.map((uni, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.9 + i * 0.05 }}
+                  whileHover={{ scale: 1.02 }}
+                  className="p-4 rounded-xl bg-white/5 border border-white/10 hover:border-neon-purple/30 transition-all"
+                >
+                  <h5 className="text-sm font-semibold text-white/90 leading-tight mb-2">{uni.name}</h5>
+                  <div className="space-y-1.5 text-xs">
+                    <p className="text-white/60">{uni.program}</p>
+                    <div className="text-neon-green font-medium">Total: {uni.totalCost}</div>
+                    {uni.ranking && <p className="text-neon-purple text-xs">{uni.ranking}</p>}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          {/* Japan, Korea, Germany */}
+          <div className="grid sm:grid-cols-3 gap-6">
+            <div>
+              <h4 className="text-sm font-semibold text-white/70 mb-3 flex items-center gap-2">
+                <span>🇯🇵</span> Japan
+              </h4>
+              <div className="space-y-3">
+                {universitiesOverseas.japan.map((uni, i) => (
+                  <div key={i} className="p-3 rounded-xl bg-white/5 border border-white/10">
+                    <h5 className="text-xs font-semibold text-white/90 mb-1">{uni.name}</h5>
+                    <p className="text-neon-green text-xs font-medium">{uni.totalCost}</p>
+                    {uni.ranking && <p className="text-neon-purple text-xs mt-1">{uni.ranking}</p>}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div>
+              <h4 className="text-sm font-semibold text-white/70 mb-3 flex items-center gap-2">
+                <span>🇰🇷</span> South Korea
+              </h4>
+              <div className="space-y-3">
+                {universitiesOverseas.southKorea.map((uni, i) => (
+                  <div key={i} className="p-3 rounded-xl bg-white/5 border border-white/10">
+                    <h5 className="text-xs font-semibold text-white/90 mb-1">{uni.name}</h5>
+                    <p className="text-neon-green text-xs font-medium">{uni.totalCost}</p>
+                    {uni.ranking && <p className="text-neon-purple text-xs mt-1">{uni.ranking}</p>}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div>
+              <h4 className="text-sm font-semibold text-white/70 mb-3 flex items-center gap-2">
+                <span>🇩🇪</span> Germany
+              </h4>
+              <div className="space-y-3">
+                {universitiesOverseas.germany.map((uni, i) => (
+                  <div key={i} className="p-3 rounded-xl bg-white/5 border border-white/10">
+                    <h5 className="text-xs font-semibold text-white/90 mb-1">{uni.name}</h5>
+                    <p className="text-neon-green text-xs font-medium">{uni.totalCost}</p>
+                    {uni.ranking && <p className="text-neon-purple text-xs mt-1">{uni.ranking}</p>}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Overseas Cost Summary */}
+          <div className="mt-6 p-4 rounded-xl bg-gradient-to-r from-neon-purple/10 to-neon-pink/10 border border-white/5">
+            <h5 className="text-sm font-semibold text-white/80 mb-2">💡 Overseas Cost Range (Total)</h5>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+              <div>
+                <p className="text-lg font-bold text-neon-green">RM 50K-87K</p>
+                <p className="text-xs text-white/50">Japan/Korea</p>
+              </div>
+              <div>
+                <p className="text-lg font-bold text-neon-green">RM 312K-594K</p>
+                <p className="text-xs text-white/50">Australia</p>
+              </div>
+              <div>
+                <p className="text-lg font-bold text-neon-green">RM 345K-960K</p>
+                <p className="text-xs text-white/50">UK</p>
+              </div>
+              <div>
+                <p className="text-lg font-bold text-neon-green">RM 810K-1.1M</p>
+                <p className="text-xs text-white/50">USA</p>
+              </div>
+            </div>
+          </div>
+        </motion.div>
 
         {/* Scholarships Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.55 }}
+          transition={{ delay: 1 }}
           className="glass rounded-2xl p-6 mb-8"
         >
           <h3 className="font-display text-lg font-bold text-white mb-2 flex items-center gap-2">
@@ -200,163 +529,69 @@ export default function CareerDetailPage() {
             Scholarships & Financial Aid
           </h3>
           <p className="text-white/50 text-sm mb-6">
-            Funding opportunities available for pursuing this career path
+            {career.scholarships.length} funding opportunities available for this career path
           </p>
 
-          {/* Malaysian Scholarships */}
           <div className="mb-6">
             <div className="flex items-center gap-2 mb-3">
               <MapPin className="w-4 h-4 text-neon-blue" />
-              <h4 className="font-semibold text-white/90 text-sm">🇲🇾 Malaysian Scholarships</h4>
+              <h4 className="font-semibold text-white/90 text-sm">🇲🇾 Malaysian Scholarships ({career.scholarships.filter(s => s.location === 'Malaysia').length})</h4>
             </div>
             <div className="grid sm:grid-cols-2 gap-3">
-              {career.scholarships
-                .filter((s) => s.location === 'Malaysia')
-                .map((scholarship, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.6 + i * 0.05 }}
-                    whileHover={{ scale: 1.02 }}
-                    className="p-3 rounded-xl bg-white/5 border border-white/10 hover:border-neon-blue/30 transition-all"
-                  >
-                    <div className="flex items-start justify-between mb-1">
-                      <h5 className="text-sm font-medium text-white/90 leading-tight pr-2">
-                        {scholarship.name}
-                      </h5>
-                      <span className={`shrink-0 px-2 py-0.5 rounded-full text-xs font-medium ${
-                        scholarship.coverage === 'Full' ? 'bg-green-500/20 text-green-300' :
-                        scholarship.coverage === 'Partial' ? 'bg-yellow-500/20 text-yellow-300' :
-                        'bg-blue-500/20 text-blue-300'
-                      }`}>
-                        {scholarship.coverage}
-                      </span>
-                    </div>
-                    <p className="text-xs text-white/40 mb-1">{scholarship.provider}</p>
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs px-2 py-0.5 rounded bg-white/5 text-white/50">
-                        {scholarship.level}
-                      </span>
-                    </div>
-                    {scholarship.description && (
-                      <p className="text-xs text-white/40 mt-2 leading-relaxed">
-                        {scholarship.description}
-                      </p>
-                    )}
-                  </motion.div>
-                ))}
+              {career.scholarships.filter((s) => s.location === 'Malaysia').map((scholarship, i) => (
+                <div key={i} className="p-3 rounded-xl bg-white/5 border border-white/10">
+                  <div className="flex items-start justify-between mb-1">
+                    <h5 className="text-sm font-medium text-white/90 leading-tight pr-2">{scholarship.name}</h5>
+                    <span className="shrink-0 px-2 py-0.5 rounded-full text-xs font-medium bg-green-500/20 text-green-300">{scholarship.coverage}</span>
+                  </div>
+                  <p className="text-xs text-white/40">{scholarship.provider}</p>
+                  <span className="text-xs px-2 py-0.5 rounded bg-white/5 text-white/50 mt-1 inline-block">{scholarship.level}</span>
+                </div>
+              ))}
             </div>
           </div>
 
-          {/* Overseas Scholarships */}
           {career.scholarships.filter((s) => s.location === 'Overseas').length > 0 && (
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <Globe className="w-4 h-4 text-neon-purple" />
-                <h4 className="font-semibold text-white/90 text-sm">🌏 International Scholarships</h4>
+                <h4 className="font-semibold text-white/90 text-sm">🌏 International Scholarships ({career.scholarships.filter(s => s.location === 'Overseas').length})</h4>
               </div>
               <div className="grid sm:grid-cols-2 gap-3">
-                {career.scholarships
-                  .filter((s) => s.location === 'Overseas')
-                  .map((scholarship, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.8 + i * 0.05 }}
-                      whileHover={{ scale: 1.02 }}
-                      className="p-3 rounded-xl bg-gradient-to-br from-neon-purple/5 to-neon-blue/5 border border-neon-purple/20 hover:border-neon-purple/40 transition-all"
-                    >
-                      <div className="flex items-start justify-between mb-1">
-                        <h5 className="text-sm font-medium text-white/90 leading-tight pr-2">
-                          {scholarship.name}
-                        </h5>
-                        <span className={`shrink-0 px-2 py-0.5 rounded-full text-xs font-medium ${
-                          scholarship.coverage === 'Full' ? 'bg-green-500/20 text-green-300' :
-                          scholarship.coverage === 'Partial' ? 'bg-yellow-500/20 text-yellow-300' :
-                          'bg-blue-500/20 text-blue-300'
-                        }`}>
-                          {scholarship.coverage}
-                        </span>
-                      </div>
-                      <p className="text-xs text-white/40 mb-1">{scholarship.provider}</p>
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs px-2 py-0.5 rounded bg-white/5 text-white/50">
-                          {scholarship.level}
-                        </span>
-                      </div>
-                      {scholarship.description && (
-                        <p className="text-xs text-white/40 mt-2 leading-relaxed">
-                          {scholarship.description}
-                        </p>
-                      )}
-                    </motion.div>
-                  ))}
+                {career.scholarships.filter((s) => s.location === 'Overseas').map((scholarship, i) => (
+                  <div key={i} className="p-3 rounded-xl bg-gradient-to-br from-neon-purple/5 to-neon-blue/5 border border-neon-purple/20">
+                    <div className="flex items-start justify-between mb-1">
+                      <h5 className="text-sm font-medium text-white/90 leading-tight pr-2">{scholarship.name}</h5>
+                      <span className="shrink-0 px-2 py-0.5 rounded-full text-xs font-medium bg-green-500/20 text-green-300">{scholarship.coverage}</span>
+                    </div>
+                    <p className="text-xs text-white/40">{scholarship.provider}</p>
+                    <span className="text-xs px-2 py-0.5 rounded bg-white/5 text-white/50 mt-1 inline-block">{scholarship.level}</span>
+                  </div>
+                ))}
               </div>
             </div>
           )}
-
-          {/* Summary Stats */}
-          <div className="mt-6 p-4 rounded-xl bg-gradient-to-r from-neon-blue/10 to-neon-purple/10 border border-white/5">
-            <div className="grid grid-cols-3 gap-4 text-center">
-              <div>
-                <p className="text-2xl font-bold text-neon-blue">
-                  {career.scholarships.filter((s) => s.location === 'Malaysia').length}
-                </p>
-                <p className="text-xs text-white/50">Local Scholarships</p>
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-neon-purple">
-                  {career.scholarships.filter((s) => s.location === 'Overseas').length}
-                </p>
-                <p className="text-xs text-white/50">Overseas Scholarships</p>
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-neon-green">
-                  {career.scholarships.filter((s) => s.coverage === 'Full').length}
-                </p>
-                <p className="text-xs text-white/50">Full Coverage</p>
-              </div>
-            </div>
-          </div>
         </motion.div>
 
-        {/* Video Section */}
+        {/* Work Environment */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
+          transition={{ delay: 1.1 }}
           className="glass rounded-2xl p-6 mb-8"
         >
           <h3 className="font-display text-lg font-bold text-white mb-4 flex items-center gap-2">
-            <Play className="w-5 h-5 text-neon-pink" />
-            Real Professionals Share Their Experience
+            <Briefcase className="w-5 h-5 text-neon-orange" />
+            Day in the Life
           </h3>
-          <p className="text-white/50 text-sm mb-6">
-            Watch real Malaysian professionals talk about their career journey
-          </p>
-          <div className="grid md:grid-cols-2 gap-4">
-            <div className="aspect-video rounded-xl bg-space-700 flex items-center justify-center border border-white/10 relative overflow-hidden group cursor-pointer">
-              <div className="absolute inset-0 bg-gradient-to-br from-neon-blue/10 to-neon-purple/10" />
-              <div className="text-center relative z-10">
-                <div className="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center mx-auto mb-2 group-hover:bg-white/20 transition-colors">
-                  <Play className="w-6 h-6 text-white" />
-                </div>
-                <p className="text-sm text-white/70">Malaysian Software Engineer</p>
-                <p className="text-xs text-white/40">Career Journey & Tips</p>
+          <p className="text-white/60 text-sm mb-4">{career.workEnvironment}</p>
+          <div className="space-y-2">
+            {career.dayInLife.map((activity, i) => (
+              <div key={i} className="flex items-start gap-3 text-sm">
+                <span className="text-neon-blue text-xs font-mono min-w-[60px]">{activity.split(' - ')[0]}</span>
+                <span className="text-white/70">{activity.split(' - ')[1]}</span>
               </div>
-            </div>
-            <div className="aspect-video rounded-xl bg-space-700 flex items-center justify-center border border-white/10 relative overflow-hidden group cursor-pointer">
-              <div className="absolute inset-0 bg-gradient-to-br from-neon-pink/10 to-neon-orange/10" />
-              <div className="text-center relative z-10">
-                <div className="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center mx-auto mb-2 group-hover:bg-white/20 transition-colors">
-                  <Play className="w-6 h-6 text-white" />
-                </div>
-                <p className="text-sm text-white/70">Day in the Life</p>
-                <p className="text-xs text-white/40">What to Expect</p>
-              </div>
-            </div>
+            ))}
           </div>
         </motion.div>
 
@@ -364,7 +599,7 @@ export default function CareerDetailPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7 }}
+          transition={{ delay: 1.2 }}
           className="glass-strong rounded-2xl p-6 mb-8"
         >
           <div className="flex items-start gap-4">
@@ -372,11 +607,9 @@ export default function CareerDetailPage() {
             <div>
               <p className="font-display font-bold text-neon-blue mb-1">{career.npcName} says:</p>
               <p className="text-white/70 text-sm">
-                "This is an exciting career path! In Malaysia, we're seeing huge growth in this field. 
-                With the right SPM results and passion, you can definitely make it. There are also 
-                <span className="text-neon-yellow font-medium"> {career.scholarships.length} scholarships </span> 
-                available to help fund your journey — both local and overseas! Start building your 
-                skills now and don't be afraid to explore!"
+                "This is an exciting career path! There are many scholarships and affordable education options 
+                both in Malaysia and overseas. With the right SPM results and passion, you can definitely make it! 
+                Don't forget to explore the pre-university pathways and plan your budget early."
               </p>
             </div>
           </div>
@@ -396,18 +629,18 @@ export default function CareerDetailPage() {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => dispatch({ type: 'NAVIGATE', page: 'catalogue' })}
-            className="px-6 py-3 rounded-full glass text-white/70 hover:text-white"
+            onClick={() => dispatch({ type: 'NAVIGATE', page: 'scholarships' })}
+            className="px-6 py-3 rounded-full glass text-white/70 hover:text-neon-yellow"
           >
-            Explore More Careers
+            🎓 Browse All Scholarships
           </motion.button>
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => dispatch({ type: 'COMPLETE_EXPLORATION' })}
+            onClick={() => dispatch({ type: 'NAVIGATE', page: 'catalogue' })}
             className="px-6 py-3 rounded-full glass text-white/70 hover:text-white"
           >
-            I'm Done Exploring ✨
+            Explore More Careers
           </motion.button>
         </div>
       </div>

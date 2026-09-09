@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useApp } from '../store/AppContext';
 import AIMascot from '../components/AIMascot';
-import { Sparkles, ArrowRight, Trophy, Users, BookOpen, Award } from 'lucide-react';
+import { Sparkles, ArrowRight, Trophy, Users, BookOpen, Award, GraduationCap } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 const typewriterTexts = [
@@ -37,6 +37,7 @@ export default function HomePage() {
     { icon: <Trophy className="w-6 h-6" />, title: 'Gamified Quiz', desc: '15 interactive questions with drag-and-drop, sliders & scenarios' },
     { icon: <Users className="w-6 h-6" />, title: 'AI-Powered', desc: 'Personalized career recommendations based on your unique profile' },
     { icon: <BookOpen className="w-6 h-6" />, title: 'Career Catalogue', desc: 'Explore 10+ STEM & IT careers with Malaysian pathways' },
+    { icon: <GraduationCap className="w-6 h-6" />, title: 'Universities', desc: 'Compare 25+ local & international universities with detailed costs', action: () => dispatch({ type: 'NAVIGATE', page: 'universities' }) },
     { icon: <Award className="w-6 h-6" />, title: 'Scholarships', desc: '130+ Malaysian & international scholarships to fund your journey', action: () => dispatch({ type: 'NAVIGATE', page: 'scholarships' }) },
   ];
 
@@ -167,7 +168,7 @@ export default function HomePage() {
             </p>
           </motion.div>
 
-          <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-6">
             {features.map((feature, i) => (
               <motion.div
                 key={i}

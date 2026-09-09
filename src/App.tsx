@@ -9,6 +9,7 @@ import CareerDetailPage from './pages/CareerDetailPage';
 import RoadmapPage from './pages/RoadmapPage';
 import CertificatePage from './pages/CertificatePage';
 import ScholarshipsPage from './pages/ScholarshipsPage';
+import UniversitiesPage from './pages/UniversitiesPage';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect } from 'react';
 
@@ -40,6 +41,8 @@ function AppContent() {
         return <CertificatePage />;
       case 'scholarships':
         return <ScholarshipsPage />;
+      case 'universities':
+        return <UniversitiesPage />;
       default:
         return <HomePage />;
     }
