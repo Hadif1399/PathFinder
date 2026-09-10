@@ -1,16 +1,16 @@
+import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Home, BookOpen, GraduationCap, Award, DollarSign } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Home, BookOpen, Menu, X, Sparkles } from 'lucide-react';
 
 export default function Navigation() {
   const location = useLocation();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const navItems = [
     { path: '/', label: 'Home', icon: Home },
-    { path: '/catalogue', label: 'Career Catalogue', icon: BookOpen },
-    { path: '/universities', label: 'Universities', icon: GraduationCap },
-    { path: '/preuni-scholarships', label: 'Pre-U Scholarships', icon: Award },
-    { path: '/scholarships', label: 'Scholarships', icon: DollarSign },
+    { path: '/quiz', label: 'Career Quiz', icon: Sparkles },
+    { path: '/catalogue', label: 'Catalogue', icon: BookOpen },
   ];
 
   return (
@@ -24,13 +24,16 @@ export default function Navigation() {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-neon-blue to-neon-purple flex items-center justify-center">
-              <span className="text-white font-bold text-lg">CC</span>
+              <span className="text-white font-bold text-sm">PF</span>
             </div>
-            <span className="text-white font-bold text-xl hidden sm:block">CareerCompass</span>
+            <div className="hidden sm:block">
+              <span className="text-white font-bold text-lg">PathFinder</span>
+              <span className="text-neon-blue text-xs block -mt-1">AI Malaysia</span>
+            </div>
           </Link>
 
-          {/* Navigation Links */}
-          <div className="hidden md:flex items-center gap-2">
+          {/* Desktop Nav */}
+          <div className="hidden md:flex items-center gap-1">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = location.pathname === item.path;
@@ -51,14 +54,69 @@ export default function Navigation() {
             })}
           </div>
 
+          {/* CTA */}
+          <div className="hidden md:block">
+            <Link to="/quiz">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-4 py-2 rounded-lg bg-gradient-to-r from-neon-blue to-neon-purple text-white text-sm font-medium"
+              >
+                Start Quiz 🚀
+              </motion.button>
+            </Link>
+          </div>
+
           {/* Mobile Menu Button */}
-          <button className="md:hidden text-white p-2">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
+          <button
+            className="md:hidden text-white p-2"
+            onClick={() => setMobileOpen(!mobileOpen)}
+          >
+            {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
       </div>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden border-t border-white/10 overflow-hidden"
+          >
+            <div className="px-4 py-4 space-y-2">
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = location.pathname === item.path;
+                return (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    onClick={() => setMobileOpen(false)}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
+                      isActive
+                        ? 'bg-gradient-to-r from-neon-blue/20 to-neon-purple/20 text-white'
+                        : 'text-white/60 hover:text-white hover:bg-white/5'
+                    }`}
+                  >
+                    <Icon className="w-5 h-5" />
+                    <span className="font-medium">{item.label}</span>
+                  </Link>
+                );
+              })}
+              <Link
+                to="/quiz"
+                onClick={() => setMobileOpen(false)}
+                className="block w-full text-center px-4 py-3 rounded-xl bg-gradient-to-r from-neon-blue to-neon-purple text-white font-medium mt-4"
+              >
+                Start Your Journey 🚀
+              </Link>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.nav>
   );
 }
