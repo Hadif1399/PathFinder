@@ -43,7 +43,10 @@ function appReducer(state: AppState, action: AppAction): AppState {
     case 'NAVIGATE':
       return { ...state, currentPage: action.page };
     case 'ANSWER_QUESTION':
-      return { ...state, quizAnswers: { ...state.quizAnswers, [action.questionId]: action.answer } };
+      return {
+        ...state,
+        quizAnswers: { ...state.quizAnswers, [action.questionId]: action.answer },
+      };
     case 'SET_PROGRESS':
       return { ...state, quizProgress: action.progress };
     case 'SET_RECOMMENDATIONS':
@@ -65,11 +68,18 @@ function appReducer(state: AppState, action: AppAction): AppState {
   }
 }
 
-const AppContext = createContext<{ state: AppState; dispatch: React.Dispatch<AppAction> } | null>(null);
+const AppContext = createContext<{
+  state: AppState;
+  dispatch: React.Dispatch<AppAction>;
+} | null>(null);
 
 export function AppProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(appReducer, initialState);
-  return <AppContext.Provider value={{ state, dispatch }}>{children}</AppContext.Provider>;
+  return (
+    <AppContext.Provider value={{ state, dispatch }}>
+      {children}
+    </AppContext.Provider>
+  );
 }
 
 export function useApp() {

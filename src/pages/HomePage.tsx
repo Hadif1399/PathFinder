@@ -1,172 +1,242 @@
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { useApp } from '../store/AppContext';
-import { Sparkles, ArrowRight, Trophy, Users, BookOpen, Award, GraduationCap, Zap, TrendingUp, Star, Compass } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { ArrowRight, Sparkles, Brain, Trophy, BookOpen, Zap } from 'lucide-react';
 
-const typewriterTexts = ["Navigate Your Future with AI", "Discover Your Dream Career", "36 Careers. Infinite Possibilities."];
-
-export default function HomePage() {
-  const { dispatch } = useApp();
-  const [textIndex, setTextIndex] = useState(0);
-  const [displayedText, setDisplayedText] = useState('');
+function TypewriterText({ text, speed = 50 }: { text: string; speed?: number }) {
+  const [displayed, setDisplayed] = useState('');
+  const [done, setDone] = useState(false);
 
   useEffect(() => {
-    const currentText = typewriterTexts[textIndex];
-    let charIndex = 0;
-    const timer = setInterval(() => {
-      if (charIndex <= currentText.length) {
-        setDisplayedText(currentText.slice(0, charIndex));
-        charIndex++;
+    let i = 0;
+    const interval = setInterval(() => {
+      if (i < text.length) {
+        setDisplayed(text.slice(0, i + 1));
+        i++;
       } else {
-        clearInterval(timer);
-        setTimeout(() => {
-          setTextIndex((prev) => (prev + 1) % typewriterTexts.length);
-          setDisplayedText('');
-        }, 2000);
+        setDone(true);
+        clearInterval(interval);
       }
-    }, 50);
-    return () => clearInterval(timer);
-  }, [textIndex]);
+    }, speed);
+    return () => clearInterval(interval);
+  }, [text, speed]);
+
+  return (
+    <span>
+      {displayed}
+      {!done && <span className="cursor-blink text-neon-blue">|</span>}
+    </span>
+  );
+}
+
+function RobotMascot({ size = 'large' }: { size?: 'small' | 'large' }) {
+  const s = size === 'large' ? 'w-48 h-48' : 'w-20 h-20';
+  return (
+    <motion.div
+      animate={{ y: [0, -10, 0] }}
+      transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+      className={`${s} relative`}
+    >
+      <div className="absolute inset-0 rounded-full bg-gradient-to-br from-neon-blue/20 to-neon-purple/20 blur-xl" />
+      <svg viewBox="0 0 200 200" className="relative w-full h-full">
+        {/* Robot body */}
+        <rect x="50" y="70" width="100" height="90" rx="20" fill="url(#robotGrad)" stroke="#00d4ff" strokeWidth="2" />
+        {/* Robot head */}
+        <rect x="60" y="30" width="80" height="60" rx="15" fill="url(#robotGrad)" stroke="#00d4ff" strokeWidth="2" />
+        {/* Antenna */}
+        <line x1="100" y1="30" x2="100" y2="15" stroke="#a855f7" strokeWidth="3" />
+        <circle cx="100" cy="12" r="5" fill="#a855f7">
+          <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite" />
+        </circle>
+        {/* Eyes */}
+        <circle cx="82" cy="55" r="10" fill="#0a0e1a" />
+        <circle cx="118" cy="55" r="10" fill="#0a0e1a" />
+        <circle cx="82" cy="55" r="6" fill="#00d4ff">
+          <animate attributeName="r" values="6;4;6" dur="3s" repeatCount="indefinite" />
+        </circle>
+        <circle cx="118" cy="55" r="6" fill="#00d4ff">
+          <animate attributeName="r" values="6;4;6" dur="3s" repeatCount="indefinite" />
+        </circle>
+        {/* Smile */}
+        <path d="M 80 72 Q 100 85 120 72" fill="none" stroke="#34d399" strokeWidth="3" strokeLinecap="round" />
+        {/* Arms */}
+        <rect x="30" y="85" width="20" height="50" rx="10" fill="url(#robotGrad)" stroke="#00d4ff" strokeWidth="1.5" />
+        <rect x="150" y="85" width="20" height="50" rx="10" fill="url(#robotGrad)" stroke="#00d4ff" strokeWidth="1.5" />
+        {/* Chest light */}
+        <circle cx="100" cy="110" r="8" fill="#a855f7" opacity="0.8">
+          <animate attributeName="opacity" values="0.8;0.3;0.8" dur="1.5s" repeatCount="indefinite" />
+        </circle>
+        {/* Legs */}
+        <rect x="70" y="160" width="20" height="30" rx="8" fill="url(#robotGrad)" stroke="#00d4ff" strokeWidth="1.5" />
+        <rect x="110" y="160" width="20" height="30" rx="8" fill="url(#robotGrad)" stroke="#00d4ff" strokeWidth="1.5" />
+        <defs>
+          <linearGradient id="robotGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#1c2647" />
+            <stop offset="100%" stopColor="#0f1629" />
+          </linearGradient>
+        </defs>
+      </svg>
+    </motion.div>
+  );
+}
+
+export default function HomePage() {
+  const heroText = "Hi! I'm Pathfinder 🤖 Your AI career guide. Let's discover YOUR perfect career path in Malaysia!";
 
   const features = [
-    { icon: <Trophy className="w-6 h-6" />, title: 'Interactive Quiz', desc: '18 engaging questions with timers, streaks & fun facts', color: 'from-neon-blue to-neon-purple' },
-    { icon: <Users className="w-6 h-6" />, title: 'AI-Powered', desc: 'Smart matching across 31 diverse career paths', color: 'from-neon-purple to-neon-pink' },
-    { icon: <BookOpen className="w-6 h-6" />, title: 'Career Catalogue', desc: 'Explore 36 diverse careers across all fields', color: 'from-neon-pink to-neon-orange' },
-    { icon: <GraduationCap className="w-6 h-6" />, title: 'Education Paths', desc: 'Compare 25+ universities with detailed costs', color: 'from-neon-orange to-neon-yellow', action: () => dispatch({ type: 'NAVIGATE', page: 'universities' }) },
-    { icon: <Award className="w-6 h-6" />, title: 'Scholarships', desc: '130+ Malaysian & international funding opportunities', color: 'from-neon-yellow to-neon-green', action: () => dispatch({ type: 'NAVIGATE', page: 'scholarships' }) },
-    { icon: <Star className="w-6 h-6" />, title: 'Career Roadmaps', desc: 'Visual journey from SPM to senior roles', color: 'from-neon-green to-neon-blue' },
+    { icon: <Brain className="w-7 h-7" />, title: 'AI-Powered Quiz', desc: '15 fun, gamified questions to find your match', gradient: 'from-neon-blue to-neon-purple' },
+    { icon: <BookOpen className="w-7 h-7" />, title: 'Career Catalogue', desc: 'Explore 15+ STEM & IT careers in detail', gradient: 'from-neon-purple to-neon-pink' },
+    { icon: <Zap className="w-7 h-7" />, title: 'Visual Roadmaps', desc: 'See your path from SPM to senior roles', gradient: 'from-neon-pink to-neon-orange' },
+    { icon: <Trophy className="w-7 h-7" />, title: 'MOE Certificate', desc: 'Earn a verified completion certificate', gradient: 'from-neon-orange to-neon-yellow' },
   ];
 
   return (
     <div className="min-h-screen pt-16">
-      <section className="relative overflow-hidden min-h-[90vh] flex items-center">
-        <div className="absolute inset-0">
-          <motion.div animate={{ x: [0, 100, 0], y: [0, -50, 0], scale: [1, 1.2, 1] }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }} className="absolute top-10 left-10 w-[500px] h-[500px] bg-gradient-to-br from-neon-blue/30 to-neon-purple/30 rounded-full blur-3xl" />
-          <motion.div animate={{ x: [0, -100, 0], y: [0, 100, 0], scale: [1, 1.3, 1] }} transition={{ duration: 25, repeat: Infinity, ease: "linear" }} className="absolute bottom-10 right-10 w-[600px] h-[600px] bg-gradient-to-br from-neon-purple/30 to-neon-pink/30 rounded-full blur-3xl" />
-          <motion.div animate={{ x: [0, 50, 0], y: [0, -100, 0] }} transition={{ duration: 30, repeat: Infinity, ease: "linear" }} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-br from-neon-pink/20 to-neon-orange/20 rounded-full blur-3xl" />
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px]" />
-        </div>
-
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }}>
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full glass-strong mb-8 border border-neon-blue/30">
-                <motion.div animate={{ rotate: 360 }} transition={{ duration: 3, repeat: Infinity, ease: "linear" }}>
-                  <Sparkles className="w-4 h-4 text-neon-yellow" />
-                </motion.div>
-                <span className="text-sm font-medium text-white/90">AI-Powered Career Guidance for Malaysian Students</span>
-              </motion.div>
-
-              <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-black text-white leading-[1.1] mb-8 tracking-tight">
-                <motion.span initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="block">Find Your</motion.span>
-                <motion.span initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="block gradient-text py-2">Perfect Career</motion.span>
-                <motion.span initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="block">Path</motion.span>
-              </h1>
-
-              <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="text-xl text-white/70 mb-10 max-w-xl leading-relaxed">
-                Take our <span className="text-neon-blue font-semibold">gamified 18-question quiz</span> and let AI guide you to the perfect career from <span className="text-neon-purple font-semibold">36 options</span>. Explore scholarships, universities, and career roadmaps.
-              </motion.p>
-
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }} className="flex flex-wrap gap-4 mb-12">
-                <motion.button whileHover={{ scale: 1.05, boxShadow: "0 0 40px rgba(0, 212, 255, 0.5)" }} whileTap={{ scale: 0.95 }} onClick={() => dispatch({ type: 'NAVIGATE', page: 'quiz' })} className="group relative px-10 py-5 rounded-2xl bg-gradient-to-r from-neon-blue via-neon-purple to-neon-pink text-white font-bold text-lg shadow-2xl shadow-neon-blue/30 overflow-hidden">
-                  <span className="relative z-10 flex items-center gap-3">
-                    Start Your Journey
-                    <motion.div animate={{ x: [0, 5, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>
-                      <ArrowRight className="w-6 h-6" />
-                    </motion.div>
-                  </span>
-                  <motion.div className="absolute inset-0 bg-gradient-to-r from-neon-purple via-neon-pink to-neon-blue" initial={{ x: "-100%" }} whileHover={{ x: "0%" }} transition={{ duration: 0.5 }} />
-                </motion.button>
-                <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => dispatch({ type: 'NAVIGATE', page: 'catalogue' })} className="px-10 py-5 rounded-2xl glass-strong text-white font-bold text-lg hover:bg-white/10 transition-all border border-white/20">
-                  Browse 36 Careers
-                </motion.button>
-              </motion.div>
-
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }} className="grid grid-cols-3 gap-8">
-                {[
-                  { num: '36', label: 'Career Paths', icon: <TrendingUp className="w-5 h-5" /> },
-                  { num: '18', label: 'Quiz Questions', icon: <Zap className="w-5 h-5" /> },
-                  { num: '130+', label: 'Scholarships', icon: <Award className="w-5 h-5" /> },
-                ].map((stat, i) => (
-                  <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.9 + i * 0.1 }} whileHover={{ scale: 1.1 }} className="text-center">
-                    <div className="flex items-center justify-center gap-2 mb-2">
-                      <div className="text-neon-blue">{stat.icon}</div>
-                      <div className="text-4xl font-black gradient-text">{stat.num}</div>
-                    </div>
-                    <div className="text-sm text-white/60 font-medium">{stat.label}</div>
-                  </motion.div>
-                ))}
-              </motion.div>
+      {/* Hero Section */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+        <div className="flex flex-col lg:flex-row items-center gap-12">
+          {/* Left: Text */}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7 }}
+            className="flex-1 text-center lg:text-left"
+          >
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.3, type: 'spring' }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6"
+            >
+              <Sparkles className="w-4 h-4 text-neon-yellow" />
+              <span className="text-sm text-white/80">AI-Powered Career Discovery for Malaysian Students</span>
             </motion.div>
 
-            <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, delay: 0.3 }} className="relative flex flex-col items-center justify-center">
-              <motion.div animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }} className="absolute w-80 h-80 rounded-full border-2 border-dashed border-neon-blue/30" />
-              <motion.div animate={{ rotate: -360 }} transition={{ duration: 15, repeat: Infinity, ease: "linear" }} className="absolute w-96 h-96 rounded-full border border-neon-purple/20" />
-              
-              <div className="relative">
-                <div className="w-32 h-32 rounded-full bg-gradient-to-br from-neon-blue via-neon-purple to-neon-pink p-1 shadow-2xl shadow-neon-blue/50 animate-float">
-                  <div className="w-full h-full rounded-full bg-space-900 flex items-center justify-center">
-                    <Compass className="w-16 h-16 text-neon-blue" />
-                  </div>
-                </div>
-                <div className="absolute -top-4 -right-4 w-12 h-12 rounded-full bg-gradient-to-br from-neon-yellow to-neon-orange flex items-center justify-center text-2xl animate-bounce">✨</div>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+              Find Your
+              <span className="block gradient-text">Dream Career</span>
+              <span className="block text-3xl sm:text-4xl lg:text-5xl mt-2">in Malaysia</span>
+            </h1>
+
+            <div className="glass rounded-xl p-4 mb-8 text-left max-w-lg mx-auto lg:mx-0">
+              <p className="text-white/80 text-lg">
+                <TypewriterText text={heroText} speed={30} />
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
+              <Link to="/quiz">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-8 py-4 rounded-xl bg-gradient-to-r from-neon-blue to-neon-purple text-white font-semibold flex items-center gap-2 shadow-lg shadow-neon-blue/30 text-lg"
+                >
+                  Start Your Journey
+                  <ArrowRight className="w-5 h-5" />
+                </motion.button>
+              </Link>
+              <Link to="/catalogue">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-8 py-4 rounded-xl glass text-white font-semibold border border-white/20 text-lg"
+                >
+                  Browse Careers
+                </motion.button>
+              </Link>
+            </div>
+          </motion.div>
+
+          {/* Right: Robot */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.5, duration: 0.5 }}
+            className="flex-shrink-0"
+          >
+            <RobotMascot size="large" />
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Features Grid */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-12"
+        >
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">How It Works</h2>
+          <p className="text-lg text-white/60">Your journey from confusion to clarity in 4 simple steps</p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {features.map((feature, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1 }}
+              className="glass rounded-2xl p-6 card-hover"
+            >
+              <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center text-white mb-4`}>
+                {feature.icon}
               </div>
+              <h3 className="text-lg font-bold text-white mb-2">{feature.title}</h3>
+              <p className="text-white/60 text-sm">{feature.desc}</p>
             </motion.div>
-          </div>
+          ))}
         </div>
+      </section>
 
-        <motion.div animate={{ y: [0, 10, 0] }} transition={{ duration: 2, repeat: Infinity }} className="absolute bottom-8 left-1/2 -translate-x-1/2">
-          <div className="w-6 h-10 rounded-full border-2 border-white/20 flex items-start justify-center p-2">
-            <motion.div animate={{ y: [0, 12, 0] }} transition={{ duration: 2, repeat: Infinity }} className="w-1.5 h-1.5 rounded-full bg-neon-blue" />
+      {/* Stats */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="glass-strong rounded-2xl p-8 sm:p-12"
+        >
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+            {[
+              { value: '15+', label: 'STEM Careers' },
+              { value: '15', label: 'Quiz Questions' },
+              { value: '100%', label: 'Free to Use' },
+              { value: 'MOE', label: 'Verified Certificate' },
+            ].map((stat, i) => (
+              <div key={i}>
+                <div className="text-3xl sm:text-4xl font-bold gradient-text mb-2">{stat.value}</div>
+                <div className="text-white/60 text-sm">{stat.label}</div>
+              </div>
+            ))}
           </div>
         </motion.div>
       </section>
 
-      <section className="py-24 relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-20">
-            <h2 className="font-display text-4xl sm:text-5xl font-black text-white mb-6 tracking-tight">
-              Your Complete Career<span className="gradient-text block mt-2">Discovery Platform</span>
-            </h2>
-            <p className="text-xl text-white/60 max-w-2xl mx-auto">From quiz to certificate, we've got everything to guide your career journey</p>
-          </motion.div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {features.map((feature, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} whileHover={{ y: -10, scale: 1.02 }} onClick={feature.action} className="group relative glass-strong rounded-3xl p-8 cursor-pointer overflow-hidden">
-                <motion.div className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
-                <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${feature.color} flex items-center justify-center mb-6 text-white shadow-lg group-hover:scale-110 transition-transform duration-300`}>{feature.icon}</div>
-                <h3 className="font-display text-2xl font-bold text-white mb-3">{feature.title}</h3>
-                <p className="text-white/60 leading-relaxed">{feature.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
+      {/* CTA */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">Ready to Find Your Path?</h2>
+          <p className="text-lg text-white/60 mb-8 max-w-xl mx-auto">
+            Take our 15-question quiz and discover careers perfectly matched to your personality and strengths.
+          </p>
+          <Link to="/quiz">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-10 py-5 rounded-xl bg-gradient-to-r from-neon-blue via-neon-purple to-neon-pink text-white font-bold text-lg shadow-lg shadow-neon-purple/30"
+            >
+              🚀 Begin the Adventure
+            </motion.button>
+          </Link>
+        </motion.div>
       </section>
-
-      <section className="py-24">
-        <div className="max-w-5xl mx-auto px-4">
-          <motion.div initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} className="relative rounded-3xl overflow-hidden">
-            <div className="relative glass-strong p-16 text-center">
-              <h2 className="font-display text-4xl sm:text-5xl font-black text-white mb-6 tracking-tight">Ready to Discover Your<span className="gradient-text block mt-2">Dream Career?</span></h2>
-              <p className="text-xl text-white/70 mb-10 max-w-2xl mx-auto">Join thousands of Malaysian students who've found their perfect career path through CareerCompass</p>
-              <motion.button whileHover={{ scale: 1.05, boxShadow: "0 0 60px rgba(0, 212, 255, 0.6)" }} whileTap={{ scale: 0.95 }} onClick={() => dispatch({ type: 'NAVIGATE', page: 'quiz' })} className="group relative px-12 py-6 rounded-2xl bg-gradient-to-r from-neon-blue via-neon-purple to-neon-pink text-white font-black text-xl shadow-2xl shadow-neon-blue/40 overflow-hidden">
-                <span className="relative z-10 flex items-center gap-3">Take the Quiz Now<motion.div animate={{ x: [0, 8, 0] }} transition={{ duration: 1.5, repeat: Infinity }}><ArrowRight className="w-7 h-7" /></motion.div></span>
-              </motion.button>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      <footer className="py-12 border-t border-white/5">
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-neon-blue via-neon-purple to-neon-pink flex items-center justify-center"><Compass className="w-5 h-5 text-white" /></div>
-            <span className="font-display font-bold text-xl text-white">Career<span className="gradient-text">Compass</span></span>
-          </div>
-          <p className="text-white/40 text-sm">© 2025 CareerCompass Malaysia — Empowering the next generation of Malaysian talent 🇲🇾</p>
-        </div>
-      </footer>
     </div>
   );
 }
